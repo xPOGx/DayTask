@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Day Task</string>
+    <string name="logo_day">Day</string>
+    <string name="logo_task">Task</string>
+    <string name="splash_image">Splash Image</string>
+    <string name="splash_text_1">Manage \nyour\nTask with\n</string>
+    <string name="app_name_clear">DayTask</string>
+    <string name="lets_start">Let\'s start</string>
+    <string name="authentication">Authentication</string>
+    <string name="splash_screen">Splash Screen</string>
 </resources>
