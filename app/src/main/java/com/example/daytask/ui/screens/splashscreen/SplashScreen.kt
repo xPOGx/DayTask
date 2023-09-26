@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,9 +52,9 @@ fun SplashScreen(
                 size = it
             }
             .padding(
-                start = 24.dp,
-                end = 24.dp,
-                top = 24.dp
+                start = dimensionResource(R.dimen.big),
+                end = dimensionResource(R.dimen.big),
+                top = dimensionResource(R.dimen.big)
             )
     ) {
         LogoColumn()
@@ -70,9 +71,9 @@ fun SplashScreen(
             text = stringResource(R.string.lets_start),
             onClick = nextActivity,
             modifier = Modifier
-                .padding(vertical = 24.dp)
+                .padding(vertical = dimensionResource(R.dimen.big))
                 .fillMaxWidth()
-                .height(64.dp)
+                .height(dimensionResource(R.dimen.large))
         )
     }
 }
@@ -85,8 +86,8 @@ fun SplashImage(
     Box(
         modifier = modifier
             .padding(
-                top = 32.dp,
-                end = 4.dp
+                top = dimensionResource(R.dimen.extra_big),
+                end = dimensionResource(R.dimen.extra_small)
             )
             .background(White)
             .fillMaxWidth(),
@@ -97,8 +98,8 @@ fun SplashImage(
             contentDescription = stringResource(R.string.splash_image),
             modifier = Modifier
                 .padding(
-                    horizontal = 24.dp,
-                    vertical = 4.dp
+                    horizontal = dimensionResource(R.dimen.big),
+                    vertical = dimensionResource(R.dimen.extra_small)
                 )
                 .height(imageSize.dp)
         )
@@ -110,10 +111,12 @@ fun SplashText(
     modifier: Modifier = Modifier
 ) {
     MultiColorText(
-        Pair(stringResource(R.string.splash_text_1), White),
-        Pair(stringResource(R.string.app_name_clear), MainColor),
+        arrayOf(
+            Pair(stringResource(R.string.splash_text_1), White),
+            Pair(stringResource(R.string.app_name_clear), MainColor)
+        ),
         style = SplashText,
-        modifier = modifier.padding(top = 32.dp)
+        modifier = modifier.padding(top = dimensionResource(R.dimen.extra_big))
     )
 }
 

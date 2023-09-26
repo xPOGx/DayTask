@@ -12,9 +12,9 @@ import androidx.compose.ui.text.withStyle
 
 @Composable
 fun MultiColorText(
-    vararg textWithColors: Pair<String, Color>,
+    textWithColors: Array<Pair<String, Color>>,
     style: TextStyle,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Text(
         text = buildAnnotatedString {

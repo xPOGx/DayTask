@@ -7,22 +7,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.ButtonText
+import com.example.daytask.ui.theme.White
 
 @Composable
 fun MainButton(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    text: String
+    onClick: () -> Unit,
+    text: String,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
         shape = RectangleShape,
+        enabled = enabled,
         modifier = modifier
     ) {
         Text(
             text = text,
             style = ButtonText,
-            color = Black
+            color = if (enabled) Black else White
         )
     }
 }

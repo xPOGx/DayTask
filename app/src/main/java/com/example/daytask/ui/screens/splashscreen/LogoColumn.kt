@@ -33,8 +33,10 @@ fun LogoColumn(
                 multi = multi
             )
             MultiColorText(
-                Pair(stringResource(R.string.logo_day), White),
-                Pair(stringResource(R.string.logo_task), MainColor),
+                arrayOf(
+                    Pair(stringResource(R.string.logo_day), White),
+                    Pair(stringResource(R.string.logo_task), MainColor)
+                ),
                 style = style
             )
         }
