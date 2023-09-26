@@ -1,6 +1,6 @@
 # DayTask - Android App !
 
-<img src="/app/src/main/res/drawable/logo.png" align="left"
+<img src="/readme/logo.png" align="left"
 width="200" hspace="10" vspace="10">
 
 Nowadays, most people have very busy schedules with lots of important tasks to be taken care of 
