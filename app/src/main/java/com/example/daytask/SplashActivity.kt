@@ -1,5 +1,6 @@
 package com.example.daytask
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.example.daytask.ui.screens.splashscreen.SplashScreen
 import com.example.daytask.ui.theme.DayTaskTheme
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +24,8 @@ class SplashActivity : ComponentActivity() {
                 ) {
                     SplashScreen(
                         nextActivity = {
-                            startActivity(Intent(this@SplashActivity, AuthActivity::class.java))
-                            this@SplashActivity.finish()
+                            startActivity(Intent(this, AuthActivity::class.java))
+                            finish()
                         }
                     )
                 }
