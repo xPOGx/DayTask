@@ -1,13 +1,14 @@
 package com.example.daytask.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-private val mainColorScheme = lightColorScheme(
+private val mainColorScheme = darkColorScheme(
     primary = MainColor,
     secondary = Secondary,
-    background = Background
+    background = Background,
+    tertiary = Tertiary
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

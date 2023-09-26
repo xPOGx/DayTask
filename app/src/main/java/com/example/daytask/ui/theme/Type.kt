@@ -50,3 +50,38 @@ val ButtonText = TextStyle(
     fontFamily = Inter,
     fontWeight = FontWeight.W600
 )
+
+val HeadlineText = TextStyle(
+    fontSize = 26.sp,
+    lineHeight = 15.3.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W600
+)
+
+val InputText = TextStyle(
+    fontSize = 18.sp,
+    lineHeight = 18.86.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400
+)
+
+val HelpText = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = 18.86.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W500
+)
+
+val PrivacyText = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 18.86.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400,
+)
+
+val GoogleText = TextStyle(
+    fontSize = 18.sp,
+    lineHeight = 24.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W500
+)
