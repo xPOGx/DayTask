@@ -3,7 +3,7 @@
     <string name="logo_day">Day</string>
     <string name="logo_task">Task</string>
     <string name="splash_image">Splash Image</string>
-    <string name="splash_text_1">Manage \nyour\nTask with\n</string>
+    <string name="splash_text_1">Manage your Task with\n</string>
     <string name="app_name_clear">DayTask</string>
     <string name="lets_start">Let\'s start</string>
     <string name="authentication">Authentication</string>
@@ -19,7 +19,11 @@
     <string name="enter">Enter %1$s</string>
     <string name="or_continue">Or continue with</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="read_agreed"><![CDATA["I have read & agreed to DayTask "]]></string>
-    <string name="privacy_policy_terms_condition"><![CDATA[Privacy Policy, Terms & Condition]]></string>
-    <string name="start_activity">Start Activity</string>
+    <string name="agreed"><![CDATA["I have read & agreed to DayTask "]]></string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_condition"><![CDATA[Terms & Condition]]></string>
+    <string name="invalid_name">Invalid name</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Minimum (6) characters required</string>
+    <string name="full_name">Full Name</string>
 </resources>
