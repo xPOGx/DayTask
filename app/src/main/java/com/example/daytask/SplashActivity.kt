@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.daytask.ui.screens.splashscreen.SplashScreen
+import com.example.daytask.ui.screens.splash.SplashScreen
 import com.example.daytask.ui.theme.DayTaskTheme
 
 @SuppressLint("CustomSplashScreen")

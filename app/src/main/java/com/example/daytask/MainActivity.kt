@@ -12,13 +12,16 @@ import com.example.daytask.ui.theme.DayTaskTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val user = intent.extras?.getString("user")
         setContent {
             DayTaskTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DayTaskApp()
+                    DayTaskApp(
+                        email = user!!
+                    )
                 }
             }
         }

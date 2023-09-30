@@ -1,4 +1,4 @@
-package com.example.daytask.ui.screens.splashscreen
+package com.example.daytask.ui.screens.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

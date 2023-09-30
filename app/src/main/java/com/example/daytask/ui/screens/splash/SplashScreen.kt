@@ -1,5 +1,6 @@
-package com.example.daytask.ui.screens.splashscreen
+package com.example.daytask.ui.screens.splash
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -51,6 +52,7 @@ fun SplashScreen(
             .onSizeChanged {
                 size = it
             }
+            .animateContentSize()
             .padding(
                 start = dimensionResource(R.dimen.big),
                 end = dimensionResource(R.dimen.big),
@@ -60,7 +62,7 @@ fun SplashScreen(
         LogoColumn()
         val columnH = size.height / density
         val imageSize = screenHeight / 3
-        if (columnH != 0f && columnH + imageSize <= screenHeight) {
+        if (!checked && columnH != 0f && columnH + imageSize <= screenHeight) {
             checked = true
         }
         if (checked) {

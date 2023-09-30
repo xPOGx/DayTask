@@ -1,6 +1,7 @@
-package com.example.daytask.ui.screens.authscreens
+package com.example.daytask.ui.screens.auth
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -44,14 +46,23 @@ fun InputColumn(
     isHidden: Boolean = false,
     onValueChange: (String) -> Unit,
     @DrawableRes leadingIconRes: Int,
-    @DrawableRes trailingIconsRes: Pair<Int, Int>? = null
+    @DrawableRes trailingIconsRes: Pair<Int, Int>? = null,
+    @StringRes errorTextRes: Int,
+    validation: () -> Boolean
 ) {
     var hidden by remember {
         mutableStateOf(isHidden)
     }
+    var isError by remember {
+        mutableStateOf(false)
+    }
     val focusManager = LocalFocusManager.current
     val keyboardActions = if (imeAction == ImeAction.Next)
-        KeyboardActions.Default else KeyboardActions(onDone = { focusManager.clearFocus() })
+        KeyboardActions.Default else KeyboardActions(
+        onDone = {
+            focusManager.clearFocus()
+        }
+    )
     val keyboardOptions = KeyboardOptions.Default.copy(
         imeAction = imeAction,
         keyboardType = if (imeAction == ImeAction.Next)
@@ -69,7 +80,10 @@ fun InputColumn(
         )
         OutlinedTextField(
             value = inputText,
-            onValueChange = onValueChange,
+            onValueChange = {
+                onValueChange(it)
+                isError = !validation()
+            },
             textStyle = InputText.copy(White),
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -111,6 +125,16 @@ fun InputColumn(
             visualTransformation = if (hidden) {
                 PasswordVisualTransformation()
             } else VisualTransformation.None,
+            isError = isError,
+            supportingText = {
+                if (isError) {
+                    Text(
+                        text = stringResource(errorTextRes),
+                        style = HelpText,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }

@@ -1,4 +1,4 @@
-package com.example.daytask.ui.screens.authscreens
+package com.example.daytask.ui.screens.auth
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
@@ -17,14 +17,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
-import com.example.daytask.ui.screens.splashscreen.LogoColumn
+import com.example.daytask.ui.screens.splash.LogoColumn
 import com.example.daytask.ui.theme.SplashLogoBigText
 
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = viewModel(),
-    goToMainActivity: () -> Unit
+    registration: (String, String) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
@@ -52,26 +52,23 @@ fun AuthScreen(
             uiState = uiState,
             updateUiState = viewModel::updateUiState,
             isLogIn = isLogIn,
-            changeIsLogIn = { isLogIn = !isLogIn},
+            changeIsLogIn = { isLogIn = !isLogIn },
             logIn = {
                 // TODO: LogIn process
-                goToMainActivity()
             },
-            signUp = {
-                // TODO: SignUp process
-                goToMainActivity()
-            },
+            signUp = { registration(uiState.email, uiState.password) },
             googleLogIn = {
                 // TODO: Google Auth LogIn
-                goToMainActivity()
             },
             googleSignUp = {
                 // TODO: Google Auth SignUp
-                goToMainActivity()
             },
+            checkPrivacy = uiState.checkedPrivacy,
+            validEmail = viewModel::checkEmail,
+            validPassword = viewModel::checkPassword,
+            validName = viewModel::checkName,
             enableLogIn = viewModel.checkLogIn(),
-            enableSignUp = viewModel.checkSingUp(),
-            checkPrivacy = uiState.checkedPrivacy
+            enableSignUp = viewModel.checkSingUp()
         )
     }
 }
