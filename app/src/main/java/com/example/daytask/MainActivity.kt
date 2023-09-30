@@ -1,5 +1,6 @@
 package com.example.daytask
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,11 +9,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.daytask.ui.theme.DayTaskTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
         val user = intent.extras?.getString("user")
+
         setContent {
             DayTaskTheme {
                 Surface(
@@ -20,10 +28,20 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     DayTaskApp(
-                        email = user!!
+                        email = user!!,
+                        signOut = {
+                            auth.signOut()
+                            goBackToAuth()
+                        }
                     )
                 }
             }
         }
+    }
+
+    private fun goBackToAuth() {
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
