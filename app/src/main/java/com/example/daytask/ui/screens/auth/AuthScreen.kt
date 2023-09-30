@@ -24,11 +24,13 @@ import com.example.daytask.ui.theme.SplashLogoBigText
 fun AuthScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = viewModel(),
-    registration: (String, String) -> Unit
+    registration: (String, String, String) -> Unit,
+    logIn: (String, String) -> Unit,
+    firstTime: Boolean = false
 ) {
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
-    var isLogIn by remember { mutableStateOf(true) }
+    var isLogIn by remember { mutableStateOf(firstTime) }
 
     Column(
         modifier = modifier
@@ -53,10 +55,8 @@ fun AuthScreen(
             updateUiState = viewModel::updateUiState,
             isLogIn = isLogIn,
             changeIsLogIn = { isLogIn = !isLogIn },
-            logIn = {
-                // TODO: LogIn process
-            },
-            signUp = { registration(uiState.email, uiState.password) },
+            logIn = { logIn(uiState.email, uiState.password)  },
+            signUp = { registration(uiState.email, uiState.password, uiState.fullName) },
             googleLogIn = {
                 // TODO: Google Auth LogIn
             },
