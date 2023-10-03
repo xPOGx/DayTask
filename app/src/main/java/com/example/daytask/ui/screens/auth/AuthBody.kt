@@ -39,8 +39,7 @@ fun AuthBody(
     updateUiState: (AuthUiState) -> Unit,
     logIn: () -> Unit,
     signUp: () -> Unit,
-    googleLogIn: () -> Unit,
-    googleSignUp: () -> Unit,
+    googleSignIn: () -> Unit,
     validEmail: () -> Boolean,
     validPassword: () -> Boolean,
     validName: () -> Boolean,
@@ -105,7 +104,7 @@ fun AuthBody(
             mainButtonTextRes = if (isLogIn) R.string.log_in else R.string.sign_up,
             enabledMainButton = if (isLogIn) enableLogIn else enableSignUp,
             onMainClick = if (isLogIn) logIn else signUp,
-            onGoogleClick = if (isLogIn) googleLogIn else googleSignUp,
+            onGoogleClick = googleSignIn,
             modifier = Modifier.padding(top = dimensionResource(R.dimen.big))
         )
         MultiColorText(

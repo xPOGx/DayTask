@@ -24,8 +24,9 @@ import com.example.daytask.ui.theme.SplashLogoBigText
 fun AuthScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = viewModel(),
-    registration: (String, String, String) -> Unit,
+    signUp: (String, String, String) -> Unit,
     logIn: (String, String) -> Unit,
+    googleSignIn: () -> Unit,
     firstTime: Boolean = false
 ) {
     val scrollState = rememberScrollState()
@@ -56,13 +57,8 @@ fun AuthScreen(
             isLogIn = isLogIn,
             changeIsLogIn = { isLogIn = !isLogIn },
             logIn = { logIn(uiState.email, uiState.password)  },
-            signUp = { registration(uiState.email, uiState.password, uiState.fullName) },
-            googleLogIn = {
-                // TODO: Google Auth LogIn
-            },
-            googleSignUp = {
-                // TODO: Google Auth SignUp
-            },
+            signUp = { signUp(uiState.email, uiState.password, uiState.fullName) },
+            googleSignIn = googleSignIn,
             checkPrivacy = uiState.checkedPrivacy,
             validEmail = viewModel::checkEmail,
             validPassword = viewModel::checkPassword,
