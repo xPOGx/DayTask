@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-        val user = intent.extras?.getString("user")
+        val userName = auth.currentUser!!.displayName!!
 
         setContent {
             DayTaskTheme {
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     DayTaskApp(
-                        email = user!!,
+                        email = userName,
                         signOut = {
                             auth.signOut()
                             goBackToAuth()
