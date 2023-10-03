@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:name=".DayTaskApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,10 +16,9 @@
         android:theme="@style/Theme.DayTask"
         tools:targetApi="31">
         <activity
-            android:name=".StartActivity"
+            android:name=".activity.StartActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:label="@string/start_activity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -25,24 +27,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
 
         </activity>
         <activity
-            android:name=".AuthActivity"
+            android:name=".activity.AuthActivity"
             android:configChanges="orientation"
-            android:label="@string/authentication"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
 
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:configChanges="orientation"
-            android:label="@string/splash_screen"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
 

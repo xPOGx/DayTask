@@ -1,4 +1,4 @@
-package com.example.daytask.ui.screens.authscreens
+package com.example.daytask.ui.screens.auth
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -14,6 +14,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -21,6 +25,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.example.daytask.R
 import com.example.daytask.ui.screens.tools.MainButton
 import com.example.daytask.ui.screens.tools.MultiColorText
@@ -28,7 +33,6 @@ import com.example.daytask.ui.theme.GoogleText
 import com.example.daytask.ui.theme.HelpColor
 import com.example.daytask.ui.theme.HelpText
 import com.example.daytask.ui.theme.MainColor
-import com.example.daytask.ui.theme.PrivacyText
 import com.example.daytask.ui.theme.White
 
 @Composable
@@ -40,8 +44,10 @@ fun AuthBody(
     updateUiState: (AuthUiState) -> Unit,
     logIn: () -> Unit,
     signUp: () -> Unit,
-    googleLogIn: () -> Unit,
-    googleSignUp: () -> Unit,
+    googleSignIn: () -> Unit,
+    validEmail: () -> Boolean,
+    validPassword: () -> Boolean,
+    validName: () -> Boolean,
     enableLogIn: Boolean,
     enableSignUp: Boolean,
     checkPrivacy: Boolean
@@ -51,18 +57,24 @@ fun AuthBody(
     ) {
         if (!isLogIn) {
             InputColumn(
-                headlineText = "Full Name",
+                headlineText = stringResource(R.string.full_name),
                 inputText = uiState.fullName,
                 onValueChange = {
                     updateUiState(uiState.copy(fullName = it))
                 },
                 leadingIconRes = R.drawable.user,
+                validation = validName,
+                errorTextRes = R.string.invalid_name,
                 modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
             )
         }
         EmailPasswordInput(
             uiState = uiState,
             updateUiState = updateUiState,
+            validEmail = validEmail,
+            validPassword = validPassword,
+            errorEmailRes = R.string.invalid_email,
+            errorPasswordRes = R.string.invalid_password,
             modifier = Modifier.padding(
                 top = if (isLogIn)
                     dimensionResource(R.dimen.small) else dimensionResource(R.dimen.medium)
@@ -79,9 +91,16 @@ fun AuthBody(
                     .padding(top = dimensionResource(R.dimen.small))
             )
         } else {
+            var isShow by remember { mutableStateOf(false) }
+            var termsText by remember { mutableStateOf(false) }
             TermsRow(
                 readPrivacy = {
-                    // TODO: read Privacy
+                    isShow = true
+                    termsText = false
+                },
+                readTerms = {
+                    isShow = true
+                    termsText = true
                 },
                 checked = checkPrivacy,
                 changeChecked = {
@@ -89,12 +108,23 @@ fun AuthBody(
                 },
                 modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
             )
+            if (isShow) {
+                val template = LoremIpsum(200).values.joinToString().replace("\n", " ")
+                AuthDialog(
+                    reason = DialogReason.Privacy,
+                    onDismissRequest = { isShow = false },
+                    dialogTitle = if (termsText) stringResource(R.string.terms_condition)
+                    else stringResource(R.string.privacy_policy),
+                    dialogText = if (termsText) stringResource(R.string.terms_big_text, template)
+                    else stringResource(R.string.privacy_big_text, template)
+                )
+            }
         }
         ButtonColumn(
             mainButtonTextRes = if (isLogIn) R.string.log_in else R.string.sign_up,
             enabledMainButton = if (isLogIn) enableLogIn else enableSignUp,
             onMainClick = if (isLogIn) logIn else signUp,
-            onGoogleClick = if (isLogIn) googleLogIn else googleSignUp,
+            onGoogleClick = googleSignIn,
             modifier = Modifier.padding(top = dimensionResource(R.dimen.big))
         )
         MultiColorText(
@@ -135,6 +165,7 @@ fun TermsRow(
     checked: Boolean,
     changeChecked: () -> Unit,
     readPrivacy: () -> Unit,
+    readTerms: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -150,13 +181,9 @@ fun TermsRow(
                 tint = if (checked) MainColor else White
             )
         }
-        MultiColorText(
-            arrayOf(
-                Pair(stringResource(R.string.read_agreed), HelpColor),
-                Pair(stringResource(R.string.privacy_policy_terms_condition), MainColor)
-            ),
-            style = PrivacyText,
-            modifier = Modifier.clickable(onClick = readPrivacy)
+        AnnotatedClickableText(
+            readPrivacy = readPrivacy,
+            readTerms = readTerms
         )
     }
 }
@@ -225,7 +252,11 @@ fun HelpDivider(
 fun EmailPasswordInput(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
-    updateUiState: (AuthUiState) -> Unit
+    updateUiState: (AuthUiState) -> Unit,
+    validEmail: () -> Boolean,
+    validPassword: () -> Boolean,
+    errorEmailRes: Int,
+    errorPasswordRes: Int
 ) {
     Column(
         modifier = modifier
@@ -236,6 +267,8 @@ fun EmailPasswordInput(
             onValueChange = {
                 updateUiState(uiState.copy(email = it))
             },
+            validation = validEmail,
+            errorTextRes = errorEmailRes,
             leadingIconRes = R.drawable.ic_usertag
         )
         InputColumn(
@@ -248,6 +281,8 @@ fun EmailPasswordInput(
             isHidden = true,
             trailingIconsRes = Pair(R.drawable.ic_eyeslash, R.drawable.ic_eye),
             imeAction = ImeAction.Done,
+            validation = validPassword,
+            errorTextRes = errorPasswordRes,
             modifier = Modifier.padding(top = dimensionResource(R.dimen.medium))
         )
     }

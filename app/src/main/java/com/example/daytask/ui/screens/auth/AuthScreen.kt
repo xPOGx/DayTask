@@ -1,4 +1,4 @@
-package com.example.daytask.ui.screens.authscreens
+package com.example.daytask.ui.screens.auth
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
@@ -17,18 +17,21 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
-import com.example.daytask.ui.screens.splashscreen.LogoColumn
+import com.example.daytask.ui.screens.splash.LogoColumn
 import com.example.daytask.ui.theme.SplashLogoBigText
 
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = viewModel(),
-    goToMainActivity: () -> Unit
+    signUp: (String, String, String) -> Unit,
+    logIn: (String, String) -> Unit,
+    googleSignIn: () -> Unit,
+    firstTime: Boolean = false
 ) {
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
-    var isLogIn by remember { mutableStateOf(true) }
+    var isLogIn by remember { mutableStateOf(firstTime) }
 
     Column(
         modifier = modifier
@@ -52,26 +55,16 @@ fun AuthScreen(
             uiState = uiState,
             updateUiState = viewModel::updateUiState,
             isLogIn = isLogIn,
-            changeIsLogIn = { isLogIn = !isLogIn},
-            logIn = {
-                // TODO: LogIn process
-                goToMainActivity()
-            },
-            signUp = {
-                // TODO: SignUp process
-                goToMainActivity()
-            },
-            googleLogIn = {
-                // TODO: Google Auth LogIn
-                goToMainActivity()
-            },
-            googleSignUp = {
-                // TODO: Google Auth SignUp
-                goToMainActivity()
-            },
+            changeIsLogIn = { isLogIn = !isLogIn },
+            logIn = { logIn(uiState.email, uiState.password)  },
+            signUp = { signUp(uiState.email, uiState.password, uiState.fullName) },
+            googleSignIn = googleSignIn,
+            checkPrivacy = uiState.checkedPrivacy,
+            validEmail = viewModel::checkEmail,
+            validPassword = viewModel::checkPassword,
+            validName = viewModel::checkName,
             enableLogIn = viewModel.checkLogIn(),
-            enableSignUp = viewModel.checkSingUp(),
-            checkPrivacy = uiState.checkedPrivacy
+            enableSignUp = viewModel.checkSingUp()
         )
     }
 }
