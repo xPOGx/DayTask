@@ -62,7 +62,7 @@ fun AuthBody(
                 onValueChange = {
                     updateUiState(uiState.copy(fullName = it))
                 },
-                leadingIconRes = R.drawable.user,
+                leadingIconRes = R.drawable.ic_user,
                 validation = validName,
                 errorTextRes = R.string.invalid_name,
                 modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
@@ -83,9 +83,7 @@ fun AuthBody(
         if (isLogIn) {
             ForgotText(
                 text = stringResource(R.string.forgot_password),
-                onClick = {
-                    // TODO: forgot password Send
-                },
+                onClick = {/* TODO: forgot password Send */},
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = dimensionResource(R.dimen.small))
@@ -109,9 +107,11 @@ fun AuthBody(
                 modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
             )
             if (isShow) {
-                val template = LoremIpsum(200).values.joinToString().replace("\n", " ")
+                val template = LoremIpsum(200) // TODO: replace template with real strings
+                    .values
+                    .joinToString()
+                    .replace("\n", " ")
                 AuthDialog(
-                    reason = DialogReason.Privacy,
                     onDismissRequest = { isShow = false },
                     dialogTitle = if (termsText) stringResource(R.string.terms_condition)
                     else stringResource(R.string.privacy_policy),
@@ -176,7 +176,7 @@ fun TermsRow(
             onClick = changeChecked
         ) {
             Icon(
-                painter = painterResource(if (checked) R.drawable.ticksquare else R.drawable.square),
+                painter = painterResource(if (checked) R.drawable.ic_ticksquare else R.drawable.ic_square),
                 contentDescription = null,
                 tint = if (checked) MainColor else White
             )
@@ -302,7 +302,7 @@ fun GoogleButton(
             .height(dimensionResource(R.dimen.large))
     ) {
         Icon(
-            painter = painterResource(R.drawable.google),
+            painter = painterResource(R.drawable.ic_google),
             contentDescription = null,
             tint = White
         )

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.withStyle
 import com.example.daytask.R
 import com.example.daytask.ui.theme.HelpColor
 import com.example.daytask.ui.theme.MainColor
+import com.example.daytask.ui.theme.PrivacyText
 
 @Composable
 fun AnnotatedClickableText(
@@ -69,6 +70,7 @@ fun AnnotatedClickableText(
             ).firstOrNull()?.let {
                 readTerms()
             }
-        }
+        },
+        style = PrivacyText
     )
 }

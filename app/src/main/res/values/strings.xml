@@ -29,4 +29,14 @@
     <string name="terms_big_text">Terms big text\n%1$s</string>
     <string name="privacy_big_text">Privacy big text\n%1$s</string>
     <string name="i_have_read">I have read %1$s</string>
+    <string name="profile">Profile</string>
+    <string name="back_button">Back</string>
+    <string name="not_be_changed">This setting can’t be changed</string>
+    <string name="new_name">new name</string>
+    <string name="new_email">new email</string>
+    <string name="new_password">new password</string>
+    <string name="current_password">current password</string>
+    <string name="different">Must be different</string>
+    <string name="successful">Successful</string>
+    <string name="no_internet">No Internet</string>
 </resources>

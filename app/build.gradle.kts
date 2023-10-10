@@ -58,7 +58,9 @@ dependencies {
 
     //noinspection GradleDependency
     implementation("androidx.core:core-ktx:1.10.1")
+    //noinspection GradleDependency
     implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation(platform("androidx.compose:compose-bom:${rootProject.extra["bom_version"]}"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -95,6 +97,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
     // Google services
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 

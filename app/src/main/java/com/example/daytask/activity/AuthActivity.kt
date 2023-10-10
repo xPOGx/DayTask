@@ -20,10 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import com.example.daytask.ui.screens.auth.AuthDialog
 import com.example.daytask.ui.screens.auth.AuthScreen
-import com.example.daytask.ui.screens.auth.DialogReason
 import com.example.daytask.ui.screens.tools.Constants.WEB_CLIENT_ID
+import com.example.daytask.ui.screens.tools.LoadingDialog
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
@@ -77,9 +76,7 @@ class AuthActivity : ComponentActivity() {
                         }
                     )
                     if (load) {
-                        AuthDialog(
-                            reason = DialogReason.Loading
-                        )
+                        LoadingDialog()
                     }
                 }
             }
