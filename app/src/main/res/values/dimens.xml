@@ -8,4 +8,8 @@
     <dimen name="big">24.dp</dimen>
     <dimen name="extra_big">32.dp</dimen>
     <dimen name="large">64.dp</dimen>
+    <dimen name="button_height">54.dp</dimen>
+    <dimen name="image_small">48.dp</dimen>
+    <dimen name="image_big">136.dp</dimen>
+    <dimen name="large_ellipse">142.dp</dimen>
 </resources>
