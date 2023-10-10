@@ -38,4 +38,5 @@
     <string name="current_password">current password</string>
     <string name="different">Must be different</string>
     <string name="successful">Successful</string>
+    <string name="no_internet">No Internet</string>
 </resources>
