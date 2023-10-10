@@ -10,7 +10,7 @@ import com.example.daytask.DayTaskApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class StartActivity : ComponentActivity() {
@@ -24,31 +24,23 @@ class StartActivity : ComponentActivity() {
     }
 
     private fun manageNavigation() {
-        val application = (this.application as DayTaskApplication)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                val currentUser = auth.currentUser
-                if (currentUser != null)
-                    goToActivity(MainActivity::class.java, currentUser.displayName)
+                if (auth.currentUser != null) goToActivity(MainActivity::class.java)
                 else {
+                    val application = (this@StartActivity.application as DayTaskApplication)
                     val repository = application.container.firstTimeRepository
-                    repository.firstTime.collectLatest { firstTime ->
-                        if (firstTime) {
-                            repository.saveFT(false)
-                            goToActivity(SplashActivity::class.java)
-                        } else goToActivity(AuthActivity::class.java)
-                    }
+                    if (repository.firstTime.first()) {
+                        repository.saveFT(false)
+                        goToActivity(SplashActivity::class.java)
+                    } else goToActivity(AuthActivity::class.java)
                 }
             }
         }
     }
 
-    private fun <T> goToActivity(cls: Class<T>, userName: String? = null) {
+    private fun <T> goToActivity(cls: Class<T>) {
         val intent = Intent(this, cls)
-        if (cls == MainActivity::class.java) {
-            val name = if (userName.isNullOrEmpty()) "no name" else userName
-            intent.putExtra("user", name)
-        }
         startActivity(intent)
         finish()
     }
