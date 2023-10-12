@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="zero">0.dp</dimen>
     <dimen name="mini">2.dp</dimen>
     <dimen name="extra_small">4.dp</dimen>
     <dimen name="small">8.dp</dimen>
