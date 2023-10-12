@@ -68,6 +68,13 @@ val PrivacyText = TextStyle(
     fontWeight = FontWeight.W400,
 )
 
+val BottomBarText = TextStyle(
+    fontSize = 10.sp,
+    lineHeight = 16.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400
+)
+
 val HelpText = TextStyle(
     fontSize = 16.sp,
     lineHeight = 18.86.sp,
