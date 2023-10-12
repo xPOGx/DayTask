@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import com.example.daytask.R
 import com.example.daytask.ui.screens.tools.MainButton
 
@@ -40,14 +41,14 @@ fun ProfileBody(
 //        Display Name
         DisabledField(
             value = userName ?: "",
-            placeholderText = "User name",
+            placeholderText = stringResource(R.string.user_name),
             leadingIconRes = R.drawable.ic_useradd_profile,
             changerField = changeName
         )
 //        Email
         DisabledField(
             value = userEmail ?: "",
-            placeholderText = "User email",
+            placeholderText = stringResource(R.string.user_email),
             leadingIconRes = R.drawable.ic_usertag_profile,
             changerField = changeEmail,
             disabled = disabled
@@ -55,35 +56,35 @@ fun ProfileBody(
 //        Password
         DisabledField(
             value = "",
-            placeholderText = "Password",
+            placeholderText = stringResource(R.string.password),
             leadingIconRes = R.drawable.ic_lock_profile,
             changerField = changePassword,
             disabled = disabled
         )
 //        My Tasks
         DisabledField(
-            value = "My Tasks",
+            value = stringResource(R.string.my_tasks),
             leadingIconRes = R.drawable.ic_task,
             trailingIconRes = R.drawable.ic_arrow_down_2,
             changerField = { /*TODO: My tasks list?*/ }
         )
 //        Privacy
         DisabledField(
-            value = "Privacy",
+            value = stringResource(R.string.privacy),
             leadingIconRes = R.drawable.ic_security_card,
             trailingIconRes = R.drawable.ic_arrow_down_2,
             changerField = { /*TODO: Privacy list?*/ }
         )
 //        Setting
         DisabledField(
-            value = "Setting",
+            value = stringResource(R.string.setting),
             leadingIconRes = R.drawable.ic_setting_2,
             trailingIconRes = R.drawable.ic_arrow_down_2,
             changerField = { /*TODO: Settings?*/ }
         )
         MainButton(
             onClick = signOut,
-            text = "Logout",
+            text = stringResource(R.string.logout),
             modifier = Modifier
                 .padding(vertical = dimensionResource(R.dimen.big))
                 .fillMaxWidth()

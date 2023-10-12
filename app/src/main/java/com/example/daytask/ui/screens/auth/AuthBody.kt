@@ -307,7 +307,7 @@ fun GoogleButton(
             tint = White
         )
         Text(
-            text = "Google",
+            text = stringResource(R.string.google),
             style = GoogleText,
             color = White,
             modifier = Modifier.padding(start = dimensionResource(R.dimen.small))
