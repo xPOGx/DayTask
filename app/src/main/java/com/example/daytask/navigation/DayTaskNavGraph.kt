@@ -10,11 +10,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.calendar.CalendarScreen
+import com.example.daytask.ui.screens.details.TaskDetailsNavigation
+import com.example.daytask.ui.screens.details.TaskDetailsScreen
 import com.example.daytask.ui.screens.home.HomeDestination
 import com.example.daytask.ui.screens.home.HomeScreen
 import com.example.daytask.ui.screens.messages.MessageDestination
@@ -40,7 +44,7 @@ fun DayTaskNavHost(
 
     when (navBackStackEntry?.destination?.route) {
         HomeDestination.route, MessageDestination.route, CalendarDestination.route,
-        NotificationDestination.route -> {
+        NotificationDestination.route, TaskDetailsNavigation.route -> {
             topBarState = true
             bottomBarState = true
         }
@@ -79,7 +83,11 @@ fun DayTaskNavHost(
                 .animateContentSize()
         ) {
             composable(route = HomeDestination.route) {
-                HomeScreen()
+                HomeScreen(
+                    navigateToDetails = {
+                        navController.navigate("${TaskDetailsNavigation.route}/$it")
+                    }
+                )
             }
             composable(route = ProfileDestination.route) {
                 ProfileScreen(
@@ -107,8 +115,16 @@ fun DayTaskNavHost(
             }
             composable(route = NewTaskDestination.route) {
                 NewTaskScreen(
-                    onBack = { navController.popBackStack(HomeDestination.route, false) }
+                    navigateUp = { navController.navigateUp() }
                 )
+            }
+            composable(
+                route = TaskDetailsNavigation.routeWithArgs,
+                arguments = listOf(navArgument(TaskDetailsNavigation.taskId) {
+                    type = NavType.StringType
+                })
+            ) {
+                TaskDetailsScreen()
             }
         }
     }
