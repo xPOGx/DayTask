@@ -54,4 +54,15 @@
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="time_format">%1$s:%2$s</string>
+    <string name="confirm">Confirm</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_details">Task Details</string>
+    <string name="time_date"><![CDATA[Time & Date]]></string>
+    <string name="create">Create</string>
+    <string name="add_team_members">Add team members</string>
+    <string name="see_all">See all</string>
+    <string name="ongoing_projects">Ongoing Projects</string>
+    <string name="team_members">Team members</string>
+    <string name="not_valid_task">Not valid Task</string>
 </resources>
