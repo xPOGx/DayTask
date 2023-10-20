@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import com.example.daytask.R
-import com.example.daytask.ui.screens.tools.Constants.noDismissProperties
+import com.example.daytask.util.Constants.noDismissProperties
 import com.example.daytask.ui.screens.tools.MainDivider
 
 @Composable

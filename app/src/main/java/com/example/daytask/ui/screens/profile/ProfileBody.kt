@@ -22,7 +22,6 @@ fun ProfileBody(
     userName: String?,
     userEmail: String?,
     saveImage: (Bitmap) -> Unit,
-    updateStatus: () -> Unit,
     changeName: () -> Unit,
     changeEmail: () -> Unit,
     changePassword: () -> Unit,
@@ -35,7 +34,6 @@ fun ProfileBody(
         ProfileAvatar(
             userPhoto = userPhoto,
             saveImage = saveImage,
-            updateStatus = updateStatus,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 //        Display Name

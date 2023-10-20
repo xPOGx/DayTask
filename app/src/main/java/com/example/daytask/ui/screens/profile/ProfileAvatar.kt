@@ -34,8 +34,7 @@ import com.example.daytask.ui.theme.MainColor
 fun ProfileAvatar(
     modifier: Modifier = Modifier,
     userPhoto: Uri?,
-    saveImage: (Bitmap) -> Unit,
-    updateStatus: () -> Unit
+    saveImage: (Bitmap) -> Unit
 ) {
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -43,7 +42,6 @@ fun ProfileAvatar(
         contract = ActivityResultContracts.GetContent()
     ) {
         it?.let {
-            updateStatus()
             @Suppress("DEPRECATION")
             bitmap = if (Build.VERSION.SDK_INT < 28)
                 MediaStore.Images.Media.getBitmap(context.contentResolver, it)
@@ -63,9 +61,7 @@ fun ProfileAvatar(
     ) {
         AvatarImage(
             avatarSizeRes = R.dimen.image_big,
-            onImageClick = {
-                launchImage.launch("image/*")
-            },
+            onImageClick = { launchImage.launch("image/*") },
             userPhoto = userPhoto
         )
         Box(

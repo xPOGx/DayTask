@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
 import com.example.daytask.ui.screens.tools.LoadingDialog
+import com.example.daytask.util.Status
 
 object ProfileDestination : NavigationDestination {
     override val route = "profile"
@@ -38,21 +39,18 @@ fun ProfileScreen(
     if (uiState.status == Status.Loading) LoadingDialog()
     if (uiState.updateResult) navigateUp()
 
-
     ProfileBody(
         signOut = signOut,
         userName = uiState.user.displayName,
         userEmail = uiState.user.email,
         userPhoto = uiState.user.photoUrl,
         saveImage = { viewModel.updateUserAvatar(context, it) },
-        updateStatus = { viewModel.updateStatus(Status.Loading) },
         changeName = { showChangeName = true },
         changeEmail = { showChangeEmail = true },
         changePassword = { showChangePassword = true },
         disabled = viewModel.disabled,
         modifier = modifier.verticalScroll(scrollState)
     )
-
 
     if (showChangeName || showChangeEmail || showChangePassword) {
         ProfileDialog(

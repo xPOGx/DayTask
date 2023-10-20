@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.window.Dialog
 import com.example.daytask.R
-import com.example.daytask.ui.screens.tools.Constants.noDismissProperties
+import com.example.daytask.util.Constants.noDismissProperties
 
 @Composable
 fun LoadingDialog(
