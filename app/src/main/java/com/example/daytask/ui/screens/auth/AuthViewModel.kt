@@ -2,8 +2,8 @@ package com.example.daytask.ui.screens.auth
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.example.daytask.ui.screens.tools.Constants.NAME_LENGTH
-import com.example.daytask.ui.screens.tools.Constants.PASSWORD_LENGTH
+import com.example.daytask.util.Constants.NAME_LENGTH
+import com.example.daytask.util.Constants.PASSWORD_LENGTH
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

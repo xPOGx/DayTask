@@ -5,6 +5,8 @@ plugins {
     id("com.google.devtools.ksp") version "1.9.10-1.0.13"
     // Firebase
     id("com.google.gms.google-services")
+    // Serialization
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -98,6 +100,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
     // Google services
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 

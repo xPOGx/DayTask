@@ -1,22 +1,12 @@
-package com.example.daytask.ui.screens.tools
+package com.example.daytask.util
 
 import android.content.Context
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.SecureFlagPolicy
 import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 
-object Constants {
-    const val PASSWORD_LENGTH = 6
-    const val NAME_LENGTH = 3
-    const val WEB_CLIENT_ID = "1097689850055-vtg3q678f856r7815kgmmofb704rd640.apps.googleusercontent.com"
-    val noDismissProperties = DialogProperties(
-        dismissOnBackPress = false,
-        dismissOnClickOutside = false,
-        securePolicy = SecureFlagPolicy.SecureOn
-    )
+object ImageLoaderManager {
     @Volatile
     private var imageLoader: ImageLoader? = null
     fun getImageLoader(context: Context): ImageLoader =

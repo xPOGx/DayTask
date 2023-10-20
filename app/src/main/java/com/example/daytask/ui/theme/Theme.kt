@@ -8,16 +8,8 @@ private val mainColorScheme = darkColorScheme(
     primary = MainColor,
     secondary = Secondary,
     background = Background,
-    tertiary = Tertiary
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary = Tertiary,
+    onSurface = White
 )
 
 @Composable
@@ -28,7 +20,6 @@ fun DayTaskTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }

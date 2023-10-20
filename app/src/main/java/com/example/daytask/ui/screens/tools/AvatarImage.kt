@@ -3,6 +3,7 @@ package com.example.daytask.ui.screens.tools
 import android.net.Uri
 import androidx.annotation.DimenRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -14,11 +15,12 @@ import androidx.compose.ui.res.dimensionResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.daytask.R
+import com.example.daytask.util.ImageLoaderManager.getImageLoader
 
 @Composable
 fun AvatarImage(
     modifier: Modifier = Modifier,
-    onImageClick: () -> Unit,
+    onImageClick: () -> Unit = { /*ignore*/ },
     userPhoto: Uri?,
     @DimenRes avatarSizeRes: Int
 ) {
@@ -31,7 +33,7 @@ fun AvatarImage(
         .placeholder(R.drawable.ic_user)
         .error(R.drawable.ic_close_square)
         .build()
-    val imageLoader = Constants.getImageLoader(context)
+    val imageLoader = getImageLoader(context)
     AsyncImage(
         model = imageRequest,
         contentDescription = null,
@@ -40,6 +42,10 @@ fun AvatarImage(
         modifier = modifier
             .size(dimensionResource(avatarSizeRes))
             .clip(CircleShape)
-            .clickable(onClick = onImageClick)
+            .clickable(
+                onClick = onImageClick,
+                interactionSource = MutableInteractionSource(),
+                indication = null
+            )
     )
 }
