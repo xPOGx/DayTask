@@ -15,5 +15,6 @@ object Constants {
         dismissOnClickOutside = false,
         securePolicy = SecureFlagPolicy.SecureOn
     )
-    val tenMinutesInMillis = TimeUnit.MINUTES.toMillis(10L)
+    const val timeLimit = 30L
+    val timeLimitMillis = TimeUnit.MINUTES.toMillis(timeLimit)
 }

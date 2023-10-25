@@ -12,4 +12,5 @@
     <dimen name="image_small">48.dp</dimen>
     <dimen name="image_big">136.dp</dimen>
     <dimen name="large_ellipse">142.dp</dimen>
+    <dimen name="menu_item_width">124.dp</dimen>
 </resources>
