@@ -7,6 +7,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.example.daytask.activity.AuthActivity
 import com.example.daytask.activity.MainActivity
+import com.example.daytask.ui.screens.tools.FirebaseManager
 import com.example.daytask.util.Constants
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
@@ -44,8 +45,11 @@ class ProfileViewModel : ViewModel() {
                 .build()
         )
             .addOnCompleteListener { task ->
-                if (task.isSuccessful)
+                if (task.isSuccessful) {
+                    val user = Firebase.auth.currentUser!!
+                    FirebaseManager.updateUserName(user.uid, user.displayName)
                     updateUiState(_uiState.value.copy(updateResult = true))
+                }
                 else updateStatus(Status.Done)
                 notifyUser(task, context)
             }
@@ -81,8 +85,11 @@ class ProfileViewModel : ViewModel() {
                                         .build()
                                 )
                                     .addOnCompleteListener { task3 ->
-                                        if (task.isSuccessful)
+                                        if (task.isSuccessful) {
+                                            val user = Firebase.auth.currentUser!!
+                                            FirebaseManager.updateUserPhoto(user.uid, user.photoUrl.toString())
                                             updateUiState(_uiState.value.copy(updateResult = true))
+                                        }
                                         else updateStatus(Status.Done)
                                         notifyUser(task3, context)
                                     }

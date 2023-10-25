@@ -6,10 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,8 +16,9 @@ import com.example.daytask.ui.theme.HelpColor
 import com.example.daytask.ui.theme.HelpText
 import com.example.daytask.ui.theme.InputText
 import com.example.daytask.ui.theme.PlaceholderColor
-import com.example.daytask.ui.theme.Secondary
 import com.example.daytask.ui.theme.White
+import com.example.daytask.util.TextFieldManager
+import com.example.daytask.util.TextFieldManager.clearFocusOnKeyboardDismiss
 
 @Composable
 fun DisabledField(
@@ -51,16 +50,7 @@ fun DisabledField(
         value = value,
         onValueChange = { /* ignore */ },
         textStyle = InputText.copy(White),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Secondary,
-            unfocusedContainerColor = Secondary,
-            focusedLeadingIconColor = Color.Unspecified,
-            unfocusedLeadingIconColor = Color.Unspecified,
-            focusedTrailingIconColor = Color.Unspecified,
-            unfocusedTrailingIconColor = Color.Unspecified,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
+        colors = TextFieldManager.colors(),
         shape = RectangleShape,
         placeholder = {
             Text(
@@ -77,6 +67,8 @@ fun DisabledField(
         trailingIcon = if (!disabled) trailingIconView else null,
         supportingText = if (disabled) supportingTextView else null,
         readOnly = true,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clearFocusOnKeyboardDismiss()
     )
 }

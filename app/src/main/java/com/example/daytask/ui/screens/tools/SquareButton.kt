@@ -1,40 +1,33 @@
 package com.example.daytask.ui.screens.tools
 
 import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import com.example.daytask.R
 import com.example.daytask.ui.theme.MainColor
 
 @Composable
-fun AddIcon(
+fun SquareButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    @DimenRes sizeRes: Int
+    @DimenRes sizeRes: Int,
+    @DrawableRes iconRes: Int
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
+    IconButton(
+        onClick = onClick,
         modifier = modifier
-            .clickable(
-                onClick = onClick,
-                indication = null,
-                interactionSource = MutableInteractionSource()
-            )
-            .size(dimensionResource(sizeRes))
             .background(MainColor)
+            .size(dimensionResource(sizeRes))
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_add_square),
+            painter = painterResource(iconRes),
             tint = Color.Unspecified,
             contentDescription = null
         )
