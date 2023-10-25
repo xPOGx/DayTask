@@ -1,15 +1,9 @@
 package com.example.daytask.ui.screens.home
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
@@ -22,26 +16,16 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    navigateToDetails: (String) -> Unit
 ) {
-    HomeBody(modifier = modifier)
-}
+    val uiState by viewModel.uiState.collectAsState()
 
-@Composable
-fun HomeBody(
-    modifier: Modifier = Modifier
-) {
-    Column(
+    HomeBody(
+        uiState = uiState,
+        navigateToDetails = navigateToDetails,
+        updateQuery = viewModel::updateQuery,
+        updateUiState = viewModel::updateUiState,
         modifier = modifier
-            .padding(horizontal = dimensionResource(R.dimen.big))
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(R.dimen.big))
-                .border(2.dp, Color.Red)
-        )
-    }
+    )
 }
-
-
