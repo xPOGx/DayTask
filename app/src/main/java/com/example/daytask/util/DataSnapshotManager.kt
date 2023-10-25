@@ -18,7 +18,7 @@ object DataSnapshotManager {
             val photoUrl = it.child("photoUrl").getValue<String>()
             val userId = it.child("userId").getValue<String>()
             User(
-                userId ?: "",
+                userId!!,
                 displayName,
                 photoUrl
             )

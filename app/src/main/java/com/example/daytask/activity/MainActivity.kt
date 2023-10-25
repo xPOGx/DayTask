@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
@@ -25,9 +24,9 @@ class MainActivity : ComponentActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
 
-            if (action != null && action == Intent.ACTION_TIME_TICK) LocalBroadcastManager
-                .getInstance(this@MainActivity)
-                .sendBroadcast(Intent(TIME_CHANGED))
+            if (action != null && action == Intent.ACTION_TIME_TICK)
+                LocalBroadcastManager.getInstance(this@MainActivity)
+                    .sendBroadcast(Intent(TIME_CHANGED))
         }
     }
     private var intentFilter = IntentFilter(Intent.ACTION_TIME_TICK)
@@ -35,7 +34,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        registerReceiver(timeChangedReceiver, intentFilter)
 
         setContent {
             DayTaskTheme {
@@ -43,7 +41,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .statusBarsPadding()
                         .navigationBarsPadding()
-                        .imePadding()
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
@@ -55,8 +52,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(timeChangedReceiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
         unregisterReceiver(timeChangedReceiver)
     }
 

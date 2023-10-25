@@ -65,4 +65,20 @@
     <string name="ongoing_projects">Ongoing Projects</string>
     <string name="team_members">Team members</string>
     <string name="not_valid_task">Not valid Task</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="completed_percentage">Completed: %1$d\%%</string>
+    <string name="percentage">%1$d\%%</string>
+    <string name="completed">Completed</string>
+    <string name="_100">100%</string>
+    <string name="due_on">Due on : %1$s</string>
+    <string name="search_tasks">Search tasks</string>
+    <string name="searched_tasks">Searched Tasks</string>
+    <string name="title">Title</string>
+    <string name="details">Details</string>
+    <string name="members">Members</string>
+    <string name="subtasks">SubTasks</string>
+    <string name="empty">Empty</string>
+    <string name="team_members_count">Team Members: %1$s</string>
+    <string name="members_count">+%1$s</string>
+    <string name="minimum_time_limit_minutes">Minimum time limit: %1$s minutes</string>
 </resources>

@@ -16,14 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.example.daytask.ui.screens.auth.AuthScreen
-import com.example.daytask.util.Constants.WEB_CLIENT_ID
 import com.example.daytask.ui.screens.tools.LoadingDialog
 import com.example.daytask.ui.theme.DayTaskTheme
+import com.example.daytask.util.Constants.WEB_CLIENT_ID
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -32,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class AuthActivity : ComponentActivity() {
@@ -39,8 +39,9 @@ class AuthActivity : ComponentActivity() {
 
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
-    private lateinit var googleResult : ActivityResultLauncher<IntentSenderRequest>
+    private lateinit var googleResult: ActivityResultLauncher<IntentSenderRequest>
 
+    private var load by mutableStateOf(false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -58,22 +59,10 @@ class AuthActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var load by remember {
-                        mutableStateOf(false)
-                    }
                     AuthScreen(
-                        signUp = { email, password, name ->
-                            load = true
-                            signUp(email, password, name) { load = false }
-                        },
-                        logIn = { email, password ->
-                            load = true
-                            logIn(email, password) { load = false }
-                        },
-                        googleSignIn = {
-                            load = true
-                            googleSignIn { load = false }
-                        }
+                        signUp = this::signUp,
+                        logIn = this::logIn,
+                        googleSignIn = this::googleSignIn
                     )
                     if (load) {
                         LoadingDialog()
@@ -110,53 +99,52 @@ class AuthActivity : ComponentActivity() {
                         val idToken = credential.googleIdToken
                         if (idToken != null) {
                             val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-                            auth.signInWithCredential (firebaseCredential)
+                            auth.signInWithCredential(firebaseCredential)
                                 .addOnCompleteListener(this) { task ->
-                                    if (task.isSuccessful) goToMainActivity()
-                                    else errorToast(task.exception!!)
+                                    if (task.isSuccessful) {
+                                        val user = auth.currentUser!!
+                                        val ref =
+                                            Firebase.database.reference.child("users/${user.uid}")
+                                        ref.child("displayName").setValue(user.displayName)
+                                        ref.child("photoUrl").setValue(user.photoUrl.toString())
+                                        goToMainActivity()
+                                    } else errorToast(task.exception!!)
                                 }
-                        } else { /* Shouldn't happen */ }
+                        } else errorToast(Exception("Unknown error")) /* Shouldn't happen */
                     } catch (e: ApiException) {
                         errorToast(e)
                     }
-                }
+                } else errorToast(Exception("Cancelled"))
             }
     }
 
     private fun signUp(
         email: String,
         password: String,
-        name: String,
-        change: () -> Unit
+        name: String
     ) {
+        load = true
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) createProfile(name)
-                else {
-                    errorToast(task.exception!!)
-                    change()
-                }
+                else errorToast(task.exception!!)
             }
     }
 
     private fun logIn(
         email: String,
-        password: String,
-        change: () -> Unit
+        password: String
     ) {
+        load = true
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) goToMainActivity()
-                else {
-                    errorToast(task.exception!!)
-                    change()
-                }
+                else errorToast(task.exception!!)
             }
     }
 
-    private fun googleSignIn(
-        change: () -> Unit
-    ) {
+    private fun googleSignIn() {
+        load = true
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener(this) { result ->
                 try {
@@ -166,10 +154,7 @@ class AuthActivity : ComponentActivity() {
                     errorToast(e)
                 }
             }
-            .addOnFailureListener(this) { e ->
-                errorToast(e)
-                change()
-            }
+            .addOnFailureListener(this) { errorToast(it) }
     }
 
     private fun goToMainActivity() {
@@ -183,11 +168,14 @@ class AuthActivity : ComponentActivity() {
             .setDisplayName(name)
             .build()
 
-        val user = auth.currentUser!!
-        user.updateProfile(profile)
+        auth.currentUser!!.updateProfile(profile)
             .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) goToMainActivity()
-                else errorToast(task.exception!!)
+                if (task.isSuccessful) {
+                    val user = auth.currentUser!!
+                    Firebase.database.reference.child("users/${user.uid}/displayName")
+                        .setValue(user.displayName)
+                    goToMainActivity()
+                } else errorToast(task.exception!!)
             }
     }
 
@@ -197,5 +185,6 @@ class AuthActivity : ComponentActivity() {
             "Authentication failed. ${exception.message}",
             Toast.LENGTH_SHORT,
         ).show()
+        load = false
     }
 }

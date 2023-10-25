@@ -64,6 +64,13 @@ val BottomBarText = TextStyle(
     fontWeight = FontWeight.W400
 )
 
+val SmallTaskInfoText = TextStyle(
+    fontSize = 11.sp,
+    lineHeight = 16.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400
+)
+
 val SmallInputText = TextStyle(
     fontSize = 11.sp,
     lineHeight = 18.86.sp,
@@ -98,6 +105,7 @@ val InputText = TextStyle(
     fontFamily = Inter,
     fontWeight = FontWeight.W400
 )
+
 //W500
 val WelcomeText = TextStyle(
     fontSize = 11.79.sp,
@@ -140,7 +148,15 @@ val NavText = TextStyle(
     fontFamily = Inter,
     fontWeight = FontWeight.W500
 )
+
 //W600
+val SmallPercentageText = TextStyle(
+    fontSize = 9.sp,
+    lineHeight = 16.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W600
+)
+
 val PercentageText = TextStyle(
     fontSize = 11.sp,
     lineHeight = 16.5.sp,

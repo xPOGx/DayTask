@@ -1,5 +1,9 @@
 package com.example.daytask.ui.screens.newtask
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,6 +26,7 @@ import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,18 +35,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.daytask.R
 import com.example.daytask.ui.theme.DateText
+import com.example.daytask.ui.theme.HelpColor
+import com.example.daytask.ui.theme.HelpText
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.Secondary
 import com.example.daytask.ui.theme.Tertiary
 import com.example.daytask.ui.theme.White
-import com.example.daytask.util.Constants
+import com.example.daytask.util.Constants.TIME_CHANGED
+import com.example.daytask.util.Constants.timeLimit
+import com.example.daytask.util.Constants.timeLimitMillis
 import com.example.daytask.util.DateFormatter
 import java.util.Calendar
 import java.util.TimeZone
@@ -54,9 +66,8 @@ fun TimeDateRow(
     currentDate: Long,
     saveDate: (Long) -> Unit
 ) {
-    val calendar = Calendar.getInstance().also { it.timeInMillis += Constants.tenMinutesInMillis }
-    val currentTime = calendar.timeInMillis
-    val currentYear = calendar.get(Calendar.YEAR)
+    var timeChecked by remember { mutableStateOf(false) }
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     val tempCalendar = Calendar.getInstance().also { it.timeInMillis = currentDate }
     var timeState by remember {
@@ -68,32 +79,44 @@ fun TimeDateRow(
             )
         )
     }
-
     val dateState = rememberDatePickerState(
         initialSelectedDateMillis = currentDate,
         yearRange = currentYear..currentYear + 100
     )
 
-    val date = dateState.selectedDateMillis
-    val selectedDate: Long =
-        if (date != null) date -
-                TimeZone.getDefault().getOffset(date) +
-                TimeUnit.HOURS.toMillis(timeState.hour.toLong()) +
-                TimeUnit.MINUTES.toMillis(timeState.minute.toLong())
-        else currentDate
-
-    if (selectedDate > currentDate) saveDate(selectedDate)
-
-    val badTime =
-        TimeUnit.MILLISECONDS.toMinutes(selectedDate) < TimeUnit.MILLISECONDS.toMinutes(currentTime)
-    if (badTime) {
-        dateState.setSelection(currentTime)
-        timeState = TimePickerState(
-            initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-            initialMinute = calendar.get(Calendar.MINUTE),
-            is24Hour = true
+    timeCheck(
+        Calendar.getInstance().also { it.timeInMillis += timeLimitMillis },
+        currentDate,
+        timeState,
+        dateState,
+        { timeState = it },
+        { saveDate(it) }
+    )
+    if (timeChecked) {
+        timeCheck(
+            Calendar.getInstance().also { it.timeInMillis += timeLimitMillis },
+            currentDate,
+            timeState,
+            dateState,
+            { timeState = it },
+            { saveDate(it) }
         )
-        saveDate(currentTime)
+        timeChecked = false
+    }
+
+    val context = LocalContext.current
+    LaunchedEffect(key1 = "checkTime") {
+        val timeChangedBroadcast = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action = intent?.action
+
+                if (action != null && action == TIME_CHANGED) {
+                    timeChecked = true
+                }
+            }
+        }
+        LocalBroadcastManager.getInstance(context)
+            .registerReceiver(timeChangedBroadcast, IntentFilter(TIME_CHANGED))
     }
 
     var dateShow by remember { mutableStateOf(false) }
@@ -104,9 +127,7 @@ fun TimeDateRow(
         modifier = modifier
     ) {
         NewTaskHeadline(headlineText = headlineText)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))) {
             DateCard(
                 drawableRes = R.drawable.ic_clock,
                 dateText = stringResource(
@@ -119,11 +140,16 @@ fun TimeDateRow(
             )
             DateCard(
                 drawableRes = R.drawable.ic_calendar_new_task,
-                dateText = DateFormatter.formatDate(selectedDate),
+                dateText = DateFormatter.formatDate(currentDate),
                 onClick = { dateShow = true },
                 modifier = Modifier.weight(1f)
             )
         }
+        Text(
+            text = stringResource(R.string.minimum_time_limit_minutes, timeLimit),
+            style = HelpText,
+            color = HelpColor
+        )
     }
     if (timeShow) {
         TimeDialog(
@@ -142,6 +168,44 @@ fun TimeDateRow(
         ) {
             DatePicker(state = dateState)
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+private fun timeCheck(
+    calendar: Calendar,
+    uiTime: Long,
+    timeState: TimePickerState,
+    dateState: DatePickerState,
+    updateTimeState: (TimePickerState) -> Unit,
+    saveDate: (Long) -> Unit
+) {
+    val selectedDate = dateState.selectedDateMillis
+    val selectedTime = if (selectedDate != null) selectedDate -
+            TimeZone.getDefault().getOffset(selectedDate) +
+            TimeUnit.HOURS.toMillis(timeState.hour.toLong()) +
+            TimeUnit.MINUTES.toMillis(timeState.minute.toLong())
+    else uiTime
+
+    val selectedMin = TimeUnit.MILLISECONDS.toMinutes(selectedTime)
+    val currentMin = TimeUnit.MILLISECONDS.toMinutes(calendar.timeInMillis)
+    val uiMin = TimeUnit.MILLISECONDS.toMinutes(uiTime)
+    when {
+        selectedMin < currentMin -> {
+            val currentTime = calendar.timeInMillis
+            saveDate(currentTime)
+            updateTimeState(
+                TimePickerState(
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
+                )
+            )
+            dateState.setSelection(currentTime)
+        }
+
+        selectedMin != uiMin ->
+            saveDate(selectedTime)
     }
 }
 
