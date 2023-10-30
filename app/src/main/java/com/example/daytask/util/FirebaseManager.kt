@@ -1,5 +1,6 @@
-package com.example.daytask.ui.screens.tools
+package com.example.daytask.util
 
+import com.example.daytask.data.SubTask
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -20,6 +21,18 @@ object FirebaseManager {
     fun uploadTask(uid: String, task: newTask): Task<Void> {
         return database.child("users/$uid/tasks").push()
             .setValue(task)
+    }
+
+    fun uploadSubTask(uid: String, taskId: String, subTask: SubTask): Task<Void> {
+        return database.child("users/$uid/tasks/$taskId/subTasksList").push()
+            .setValue(subTask)
+    }
+
+    fun updateSubTask(uid: String, taskId: String, subTaskId: String, completed: Boolean): Task<Void> {
+        return database.child("users/$uid/tasks/$taskId/subTasksList/$subTaskId")
+            .updateChildren(
+                mapOf<String, Any>("completed" to completed)
+            )
     }
 }
 
