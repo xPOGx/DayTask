@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.daytask.R
 import com.example.daytask.data.User
+import com.example.daytask.ui.screens.tools.CompleteCircle
 import com.example.daytask.ui.screens.tools.SmallAvatarsRow
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor

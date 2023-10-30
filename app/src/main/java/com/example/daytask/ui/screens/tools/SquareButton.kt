@@ -18,7 +18,8 @@ fun SquareButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     @DimenRes sizeRes: Int,
-    @DrawableRes iconRes: Int
+    @DrawableRes iconRes: Int,
+    tint: Color = Color.Unspecified
 ) {
     IconButton(
         onClick = onClick,
@@ -28,7 +29,7 @@ fun SquareButton(
     ) {
         Icon(
             painter = painterResource(iconRes),
-            tint = Color.Unspecified,
+            tint = tint,
             contentDescription = null
         )
     }

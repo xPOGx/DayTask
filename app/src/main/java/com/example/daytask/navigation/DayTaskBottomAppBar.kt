@@ -10,7 +10,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -19,19 +18,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.daytask.R
 import com.example.daytask.ui.screens.calendar.CalendarDestination
-import com.example.daytask.ui.screens.details.TaskDetailsNavigation
 import com.example.daytask.ui.screens.home.HomeDestination
 import com.example.daytask.ui.screens.messages.MessageDestination
 import com.example.daytask.ui.screens.notification.NotificationDestination
-import com.example.daytask.ui.screens.tools.AddIcon
-import com.example.daytask.ui.screens.tools.MainButton
+import com.example.daytask.ui.screens.tools.SquareButton
 import com.example.daytask.ui.theme.BottomBarColor
 import com.example.daytask.ui.theme.BottomBarText
 import com.example.daytask.ui.theme.MainColor
@@ -78,8 +74,10 @@ fun DayTaskBottomAppBar(
                     active = currentRoute == MessageDestination.route,
                     modifier = Modifier.weight(1f)
                 )
-                AddIcon(
+                SquareButton(
                     onClick = navigateToNewTask,
+                    sizeRes = R.dimen.button_height,
+                    iconRes = R.drawable.ic_add_square,
                     modifier = Modifier.weight(1f)
                 )
                 BottomBarIcon(
@@ -98,32 +96,6 @@ fun DayTaskBottomAppBar(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun AddIcon(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.clickable(
-            onClick = onClick,
-            indication = null,
-            interactionSource = MutableInteractionSource()
-        )
-    ) {
-        Box(
-            modifier = Modifier
-                .size(dimensionResource(R.dimen.button_height))
-                .background(MainColor)
-        )
-        Icon(
-            painter = painterResource(R.drawable.ic_add_square),
-            tint = Color.Unspecified,
-            contentDescription = null
-        )
     }
 }
 

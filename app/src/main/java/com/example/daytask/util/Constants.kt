@@ -1,7 +1,9 @@
 package com.example.daytask.util
 
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
+import com.example.daytask.ui.theme.Background
 import java.util.concurrent.TimeUnit
 
 object Constants {
@@ -17,4 +19,5 @@ object Constants {
     )
     const val timeLimit = 30L
     val timeLimitMillis = TimeUnit.MINUTES.toMillis(timeLimit)
+    val backgroundRGB = Background.toArgb()
 }

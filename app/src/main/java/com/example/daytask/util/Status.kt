@@ -1,6 +1,7 @@
 package com.example.daytask.util
 
-enum class Status {
-    Loading,
-    Done
+enum class Status(var message: String) {
+    Loading(""),
+    Done(""),
+    Error("")
 }

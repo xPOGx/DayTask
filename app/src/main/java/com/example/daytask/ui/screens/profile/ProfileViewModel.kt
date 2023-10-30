@@ -7,8 +7,8 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.example.daytask.activity.AuthActivity
 import com.example.daytask.activity.MainActivity
-import com.example.daytask.ui.screens.tools.FirebaseManager
 import com.example.daytask.util.Constants
+import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
 import com.example.daytask.util.Status
@@ -41,7 +41,7 @@ class ProfileViewModel : ViewModel() {
 
         Firebase.auth.currentUser!!.updateProfile(
             UserProfileChangeRequest.Builder()
-                .setDisplayName(_uiState.value.userName)
+                .setDisplayName(_uiState.value.userName.trim())
                 .build()
         )
             .addOnCompleteListener { task ->
@@ -115,7 +115,7 @@ class ProfileViewModel : ViewModel() {
 
         val password = _uiState.value.userPassword
         val email = Firebase.auth.currentUser!!.email!!
-        val newEmail = _uiState.value.userEmail
+        val newEmail = _uiState.value.userEmail.trim()
         val credential = EmailAuthProvider.getCredential(email, password)
         Firebase.auth.currentUser!!.reauthenticate(credential)
             .addOnCompleteListener { task ->

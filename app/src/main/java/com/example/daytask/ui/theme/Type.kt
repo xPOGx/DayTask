@@ -78,6 +78,13 @@ val SmallInputText = TextStyle(
     fontWeight = FontWeight.W400
 )
 
+val ProjectDetailText = TextStyle(
+    fontSize = 12.sp,
+    lineHeight = 18.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400
+)
+
 val PrivacyText = TextStyle(
     fontSize = 14.sp,
     lineHeight = 18.86.sp,
@@ -107,6 +114,13 @@ val InputText = TextStyle(
 )
 
 //W500
+val ProjectInfoText = TextStyle(
+    fontSize = 11.sp,
+    lineHeight = 21.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W500
+)
+
 val WelcomeText = TextStyle(
     fontSize = 11.79.sp,
     lineHeight = 18.86.sp,
@@ -124,6 +138,13 @@ val TeamCardText = TextStyle(
 val HelpText = TextStyle(
     fontSize = 16.sp,
     lineHeight = 18.86.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W500
+)
+
+val ProjectTitleText = TextStyle(
+    fontSize = 18.sp,
+    lineHeight = 21.5.sp,
     fontFamily = Inter,
     fontWeight = FontWeight.W500
 )
@@ -160,6 +181,13 @@ val SmallPercentageText = TextStyle(
 val PercentageText = TextStyle(
     fontSize = 11.sp,
     lineHeight = 16.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W600
+)
+
+val DetailsDateText = TextStyle(
+    fontSize = 17.sp,
+    lineHeight = 21.5.sp,
     fontFamily = Inter,
     fontWeight = FontWeight.W600
 )

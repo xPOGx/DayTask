@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.daytask.ui.DayTaskApp
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
+import com.example.daytask.util.Constants.backgroundRGB
 
 class MainActivity : ComponentActivity() {
     private val timeChangedReceiver = object : BroadcastReceiver() {
@@ -34,6 +35,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = backgroundRGB
+        window.navigationBarColor = backgroundRGB
 
         setContent {
             DayTaskTheme {
