@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.daytask.R
 import com.example.daytask.data.User
+import com.example.daytask.ui.theme.HelpColor
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.PercentageText
-import com.example.daytask.ui.theme.White
 
 @Composable
 fun SmallAvatar(
@@ -55,7 +55,7 @@ fun SmallAvatarsRow(
             Text(
                 text = stringResource(R.string.members_count, memberList.size - index),
                 style = PercentageText,
-                color = White
+                color = HelpColor
             )
         }
     }

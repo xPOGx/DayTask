@@ -1,6 +1,5 @@
 package com.example.daytask.ui.screens.home
 
-import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
@@ -10,12 +9,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -41,7 +40,6 @@ import com.example.daytask.data.Task
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.NewTaskHeadlineText
-import com.example.daytask.ui.theme.PercentageText
 import com.example.daytask.ui.theme.Secondary
 import com.example.daytask.ui.theme.SeeAllText
 import com.example.daytask.ui.theme.SmallPercentageText
@@ -63,13 +61,17 @@ fun HomeBody(
     var searchActive by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    Column(modifier = modifier.padding(horizontal = dimensionResource(R.dimen.big))) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(R.dimen.big))
+            .verticalScroll(rememberScrollState())
+    ) {
         HomeSearchBox(
             uiState = uiState,
             updateUiState = updateUiState,
             updateQuery = updateQuery,
-            updateSearchState = { searchActive = it },
-            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.big))
+            updateSearchState = { searchActive = it }
         )
         AnimatedVisibility(visible = !uiState.loadQueryResult) {
             Column(
@@ -202,17 +204,20 @@ fun ActiveTasksListColumn(
         if (tasksList.isEmpty()) {
             EmptyText(modifier)
         } else {
-            LazyColumn(modifier = modifier) {
-                items(tasksList) { task ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
+                modifier = modifier
+            ) {
+                tasksList.forEach { task ->
                     OngoingCard(
                         onCardClick = { navigateToDetails(task.id) },
                         title = task.title,
                         memberList = task.memberList,
                         date = task.date,
-                        percentage = MathManager.countCompletePercentage(task.subTasksList),
-                        modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
+                        percentage = MathManager.countCompletePercentage(task.subTasksList)
                     )
                 }
+                Spacer(modifier = Modifier)
             }
         }
     }
@@ -230,25 +235,25 @@ fun SearchedTasksListColumn(
             onSeeVisible = false,
             modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
         )
-        if (tasksList.isNotEmpty()) {
-            LazyColumn {
-                items(tasksList.sortedBy { !it.taskComplete }) { task ->
-                    TaskCard(
-                        onCardClick = { navigateToDetails(task.id) },
-                        memberListSize = task.memberList.size,
-                        completed = task.taskComplete,
-                        percent = if (task.taskComplete) 100 else MathManager.countCompletePercentage(
-                            task.subTasksList
-                        )
-                            .toInt(),
-                        title = task.title,
-                        date = task.date,
-                        modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
-                    )
-                }
-            }
-        } else {
+        if (tasksList.isEmpty()) {
             EmptyText()
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))) {
+                tasksList.sortedBy { !it.taskComplete }
+                    .forEach { task ->
+                        TaskCard(
+                            onCardClick = { navigateToDetails(task.id) },
+                            memberListSize = task.memberList.size,
+                            completed = task.taskComplete,
+                            percent = if (task.taskComplete)
+                                100 else MathManager.countCompletePercentage(task.subTasksList)
+                                .toInt(),
+                            title = task.title,
+                            date = task.date
+                        )
+                    }
+                Spacer(modifier = Modifier)
+            }
         }
     }
 }
@@ -299,36 +304,6 @@ fun CompleteLine(
                 cap = StrokeCap.Round
             )
         }
-    }
-}
-
-@Composable
-fun CompleteCircle(
-    modifier: Modifier = Modifier,
-    @DimenRes sizeRes: Int,
-    percentage: Float
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.size(dimensionResource(sizeRes))
-    ) {
-        Canvas(modifier = Modifier.size(dimensionResource(sizeRes))) {
-            drawArc(
-                color = MainColor,
-                startAngle = -30f,
-                sweepAngle = -360f * percentage,
-                useCenter = false,
-                style = Stroke(
-                    width = 8f,
-                    cap = StrokeCap.Round
-                )
-            )
-        }
-        Text(
-            text = stringResource(R.string.percentage, (percentage * 100).toInt()),
-            style = PercentageText,
-            color = White
-        )
     }
 }
 

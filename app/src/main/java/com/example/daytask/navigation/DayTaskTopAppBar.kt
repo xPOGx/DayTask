@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.daytask.R
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
+import com.example.daytask.ui.screens.edittask.EditTaskNavigation
 import com.example.daytask.ui.screens.home.HomeDestination
 import com.example.daytask.ui.screens.messages.MessageDestination
 import com.example.daytask.ui.screens.newtask.NewTaskDestination
@@ -47,7 +48,8 @@ import com.google.firebase.ktx.Firebase
 fun DayTaskTopAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    topBarState: Boolean
+    topBarState: Boolean,
+    currentItemId: String
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val titleRes: Int = chooseTitle(navBackStackEntry?.destination?.route ?: HomeDestination.route)
@@ -57,35 +59,63 @@ fun DayTaskTopAppBar(
         enter = slideInVertically { -it },
         exit = slideOutVertically { -it }
     ) {
-        if (navBackStackEntry?.destination?.route == HomeDestination.route) {
-            val user = Firebase.auth.currentUser!!
-            HomeTopBar(
-                navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                userName = user.displayName,
-                userPhoto = user.photoUrl,
-                modifier = Modifier.padding(dimensionResource(R.dimen.big))
-            )
-        } else {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(titleRes),
-                        style = NavText
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack(HomeDestination.route, false) }) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrowleft),
-                            contentDescription = stringResource(R.string.back_button)
+        when (navBackStackEntry?.destination?.route) {
+            HomeDestination.route -> {
+                val user = Firebase.auth.currentUser!!
+                HomeTopBar(
+                    navigateToProfile = { navController.navigate(ProfileDestination.route) },
+                    userName = user.displayName,
+                    userPhoto = user.photoUrl,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.big))
+                )
+            }
+
+            else -> {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(titleRes),
+                            style = NavText
                         )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Background
-                ),
-                modifier = modifier
-            )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                when (titleRes) {
+                                    ProfileDestination.titleRes, TaskDetailsNavigation.titleRes,
+                                    EditTaskNavigation.titleRes -> navController.navigateUp()
+                                    else -> navController.popBackStack(HomeDestination.route, false)
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrowleft),
+                                contentDescription = stringResource(R.string.back_button),
+                                tint = Color.Unspecified
+                            )
+                        }
+                    },
+                    actions = {
+                        if (titleRes == TaskDetailsNavigation.titleRes) {
+                            IconButton(
+                                onClick = {
+                                    navController.navigate("${EditTaskNavigation.route}/$currentItemId")
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_edit),
+                                    contentDescription = null,
+                                    tint = Color.Unspecified
+                                )
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Background
+                    ),
+                    modifier = modifier
+                )
+            }
         }
     }
 }
@@ -132,5 +162,6 @@ private fun chooseTitle(route: String): Int = when (route) {
     NotificationDestination.route -> NotificationDestination.titleRes
     NewTaskDestination.route -> NewTaskDestination.titleRes
     TaskDetailsNavigation.routeWithArgs -> TaskDetailsNavigation.titleRes
+    EditTaskNavigation.routeWithArgs -> EditTaskNavigation.titleRes
     else -> HomeDestination.titleRes
 }

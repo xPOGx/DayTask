@@ -19,6 +19,8 @@ import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.calendar.CalendarScreen
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
 import com.example.daytask.ui.screens.details.TaskDetailsScreen
+import com.example.daytask.ui.screens.edittask.EditTaskNavigation
+import com.example.daytask.ui.screens.edittask.EditTaskScreen
 import com.example.daytask.ui.screens.home.HomeDestination
 import com.example.daytask.ui.screens.home.HomeScreen
 import com.example.daytask.ui.screens.messages.MessageDestination
@@ -41,16 +43,23 @@ fun DayTaskNavHost(
     var bottomBarState by remember { mutableStateOf(false) }
     var topBarState by remember { mutableStateOf(false) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    var currentItemId by remember { mutableStateOf("") }
 
     when (navBackStackEntry?.destination?.route) {
         HomeDestination.route, MessageDestination.route, CalendarDestination.route,
-        NotificationDestination.route, TaskDetailsNavigation.route -> {
+        NotificationDestination.route -> {
             topBarState = true
             bottomBarState = true
         }
 
-        ProfileDestination.route, NewTaskDestination.route -> {
+        ProfileDestination.route, NewTaskDestination.route, TaskDetailsNavigation.routeWithArgs,
+        EditTaskNavigation.routeWithArgs -> {
             topBarState = true
+            bottomBarState = false
+        }
+
+        else -> {
+            topBarState = false
             bottomBarState = false
         }
     }
@@ -59,7 +68,8 @@ fun DayTaskNavHost(
         topBar = {
             DayTaskTopAppBar(
                 navController = navController,
-                topBarState = topBarState
+                topBarState = topBarState,
+                currentItemId = currentItemId
             )
         },
         bottomBar = {
@@ -84,8 +94,9 @@ fun DayTaskNavHost(
         ) {
             composable(route = HomeDestination.route) {
                 HomeScreen(
-                    navigateToDetails = {
-                        navController.navigate("${TaskDetailsNavigation.route}/$it")
+                    navigateToDetails = { id ->
+                        currentItemId = id
+                        navController.navigate("${TaskDetailsNavigation.route}/$id")
                     }
                 )
             }
@@ -124,7 +135,15 @@ fun DayTaskNavHost(
                     type = NavType.StringType
                 })
             ) {
-                TaskDetailsScreen()
+                TaskDetailsScreen(navigateUp = { navController.navigateUp() })
+            }
+            composable(
+                route = EditTaskNavigation.routeWithArgs,
+                arguments = listOf(navArgument(EditTaskNavigation.taskId) {
+                    type = NavType.StringType
+                })
+            ) {
+                EditTaskScreen()
             }
         }
     }

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.example.daytask.R
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
-import com.example.daytask.ui.screens.tools.FirebaseManager
 import com.example.daytask.util.Constants.timeLimitMillis
+import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
 import com.example.daytask.util.Status
@@ -47,8 +47,8 @@ class NewTaskViewModel : ViewModel() {
 
         val state = _uiState.value
         val newTask = Task(
-            title = state.title,
-            detail = state.details,
+            title = state.title.trim(),
+            detail = state.details.trim(),
             memberList = state.memberList,
             date = state.date,
             subTasksList = listOf(),
