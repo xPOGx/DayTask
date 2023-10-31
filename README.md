@@ -14,9 +14,9 @@ pretty sleek.
 ## Features
 
 The android app lets you:
-- Create Tasks
+- Create and edit Tasks
 - Registration and Login
-- Change profile info
+- Create and change profile
 
 
 ## Screenshots
@@ -29,7 +29,7 @@ On Android versions prior to Android 7.0, DayTask requires the following permiss
 
 ## Contributing
 
-DayTask app is a free and open source project developed by [xPOGx](https://github.com/xPOGx). Any 
+DayTask app is a free and open source project developed by [xPOGx](https://github.com/xPOGx). 
 
 ## License
 
