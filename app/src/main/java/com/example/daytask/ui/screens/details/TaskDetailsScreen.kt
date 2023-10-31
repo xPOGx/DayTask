@@ -41,7 +41,7 @@ fun TaskDetailsScreen(
             title = uiState.title,
             validTitle = viewModel.validTitle(),
             updateTitle = { viewModel.updateUiState(uiState.copy(title = it)) },
-            addSubTask = viewModel::addSubTask
+            buttonAction = viewModel::addSubTask
         )
     }
 

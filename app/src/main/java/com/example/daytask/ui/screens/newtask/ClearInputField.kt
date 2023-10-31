@@ -30,14 +30,13 @@ fun ClearInputField(
     headlineText: String,
     inputText: String,
     onValueChange: (String) -> Unit,
-    imeAction: ImeAction,
+    imeAction: ImeAction = ImeAction.Default,
     textStyle: TextStyle = InputText.copy(White)
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction)
     val keyboardActions = KeyboardActions(
-        onNext = { focusManager.moveFocus(FocusDirection.Down) },
-        onDone = { focusManager.clearFocus() }
+        onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
 
     Column(

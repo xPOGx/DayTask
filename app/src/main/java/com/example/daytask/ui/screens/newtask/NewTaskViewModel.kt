@@ -30,7 +30,6 @@ class NewTaskViewModel : ViewModel() {
         val currentTime = Calendar.getInstance().timeInMillis
         return state.title.isNotBlank() &&
                 state.details.isNotBlank() &&
-                state.memberList.isNotEmpty() &&
                 state.date > currentTime
     }
 

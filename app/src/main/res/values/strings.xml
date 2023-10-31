@@ -76,7 +76,7 @@
     <string name="title">Title</string>
     <string name="details">Details</string>
     <string name="members">Members</string>
-    <string name="subtasks">subtasks</string>
+    <string name="subtasks">Subtasks</string>
     <string name="empty">Empty</string>
     <string name="team_members_count">Team Members: %1$s</string>
     <string name="members_count">+%1$s</string>
@@ -89,4 +89,6 @@
     <string name="edit_mode">Edit mode</string>
     <string name="finish_task">Finish Task</string>
     <string name="edit_task">Edit Task</string>
+    <string name="must_be_at_least_one_member">Must be at least one member</string>
+    <string name="save_changes">Save changes</string>
 </resources>

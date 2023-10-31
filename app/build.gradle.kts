@@ -11,13 +11,12 @@ plugins {
 
 android {
     namespace = "com.example.daytask"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.daytask"
         minSdk = 24
-        //noinspection OldTargetApi
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -59,7 +58,7 @@ android {
 dependencies {
 
     //noinspection GradleDependency
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
     //noinspection GradleDependency
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
@@ -96,7 +95,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.4.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")

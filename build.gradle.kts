@@ -1,10 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     extra.apply {
-        set("nav_version", "2.6.0")
+        set("nav_version", "2.7.3")
         set("room_version", "2.5.2")
         set("lifecycle_version", "2.6.2")
-        set("bom_version", "2023.06.01")
+        set("bom_version", "2023.09.00")
     }
 }
 

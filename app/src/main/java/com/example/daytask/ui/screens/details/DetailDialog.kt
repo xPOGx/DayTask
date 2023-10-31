@@ -31,15 +31,15 @@ fun DetailDialog(
     title: String,
     validTitle: Boolean,
     updateTitle: (String) -> Unit,
-    addSubTask: () -> Unit
+    buttonAction: () -> Unit
 ) {
     Dialog(onDismissRequest) {
-        AddSubTask(
+        DialogContent(
             title = title,
             validTitle = validTitle,
             updateTitle = updateTitle,
-            addSubTask = {
-                addSubTask()
+            buttonAction = {
+                buttonAction()
                 onDismissRequest()
             },
             cancel = onDismissRequest
@@ -48,12 +48,12 @@ fun DetailDialog(
 }
 
 @Composable
-fun AddSubTask(
+fun DialogContent(
     modifier: Modifier = Modifier,
     title: String,
     validTitle: Boolean,
     updateTitle: (String) -> Unit,
-    addSubTask: () -> Unit,
+    buttonAction: () -> Unit,
     cancel: () -> Unit
 ) {
     Box(
@@ -74,7 +74,7 @@ fun AddSubTask(
                 shape = RectangleShape,
                 colors = TextFieldManager.colors(),
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { if (validTitle) addSubTask() }),
+                keyboardActions = KeyboardActions(onDone = { if (validTitle) buttonAction() }),
                 modifier = Modifier
                     .padding(bottom = dimensionResource(R.dimen.medium))
                     .fillMaxWidth()
@@ -89,7 +89,7 @@ fun AddSubTask(
                     modifier = Modifier.padding(end = dimensionResource(R.dimen.medium))
                 )
                 MainButton(
-                    onClick = addSubTask,
+                    onClick = buttonAction,
                     text = stringResource(R.string.save),
                     enabled = validTitle
                 )

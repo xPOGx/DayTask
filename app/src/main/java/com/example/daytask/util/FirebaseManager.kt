@@ -34,5 +34,18 @@ object FirebaseManager {
                 mapOf<String, Any>("completed" to completed)
             )
     }
+
+    fun updateTask(uid: String, taskId: String, task: newTask): Task<Void> {
+        return database.child("users/$uid/tasks/$taskId")
+            .updateChildren(
+                mapOf<String, Any>(
+                    "title" to task.title,
+                    "detail" to task.detail,
+                    "date" to task.date,
+                    "memberList" to task.memberList,
+                    "subTasksList" to task.subTasksList
+                )
+            )
+    }
 }
 
