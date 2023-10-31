@@ -80,7 +80,7 @@ fun TimeDateRow(
         )
     }
     val dateState = rememberDatePickerState(
-        initialSelectedDateMillis = currentDate,
+        initialSelectedDateMillis = currentDate + tempCalendar.timeZone.getOffset(currentDate),
         yearRange = currentYear..currentYear + 100
     )
 
