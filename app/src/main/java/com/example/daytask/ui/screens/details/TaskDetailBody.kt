@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -29,14 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.daytask.R
-import com.example.daytask.data.SubTask
 import com.example.daytask.ui.screens.tools.CompleteCircle
 import com.example.daytask.ui.screens.tools.MainButton
-import com.example.daytask.ui.screens.tools.SquareButton
+import com.example.daytask.ui.screens.tools.SubTaskCard
 import com.example.daytask.ui.theme.DetailTextColor
 import com.example.daytask.ui.theme.ProjectDetailText
 import com.example.daytask.ui.theme.ProjectTitleText
-import com.example.daytask.ui.theme.Secondary
 import com.example.daytask.ui.theme.TaskTitleText
 import com.example.daytask.ui.theme.Tertiary
 import com.example.daytask.ui.theme.White
@@ -159,48 +154,6 @@ fun ProjectInfoTextColumn(
             color = DetailTextColor,
             modifier = Modifier.fillMaxWidth()
         )
-    }
-}
-
-@Composable
-fun SubTaskCard(
-    modifier: Modifier = Modifier,
-    subtask: SubTask,
-    actionSubTask: () -> Unit,
-    deleting: Boolean = false
-) {
-    val iconRes = when {
-        deleting -> R.drawable.ic_trash
-        subtask.completed -> R.drawable.ic_tick_circle
-        else -> R.drawable.ic_notick_circle
-    }
-
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Secondary),
-        shape = RectangleShape,
-        modifier = modifier
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            DetailTitleTextBox(
-                text = subtask.title,
-                modifier = Modifier
-                    .padding(vertical = dimensionResource(R.dimen.medium))
-                    .padding(start = dimensionResource(R.dimen.medium))
-                    .weight(1f)
-            )
-            SquareButton(
-                onClick = actionSubTask,
-                sizeRes = R.dimen.button_height,
-                iconRes = iconRes,
-                modifier = Modifier
-                    .padding(vertical = dimensionResource(R.dimen.small))
-                    .padding(end = dimensionResource(R.dimen.small))
-            )
-        }
     }
 }
 
