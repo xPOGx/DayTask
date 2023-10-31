@@ -143,7 +143,7 @@ fun DayTaskNavHost(
                     type = NavType.StringType
                 })
             ) {
-                EditTaskScreen()
+                EditTaskScreen(navigateUp = { navController.navigateUp() })
             }
         }
     }
