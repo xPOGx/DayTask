@@ -1,6 +1,10 @@
 package com.example.daytask.navigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -62,7 +66,11 @@ fun DayTaskNavHost(
             )
         },
         bottomBar = {
-            AnimatedVisibility(visible = bottomBarState) {
+            AnimatedVisibility(
+                visible = bottomBarState,
+                enter = slideInVertically { it } + expandVertically(),
+                exit =  shrinkVertically() + slideOutVertically { it }
+            ) {
                 DayTaskBottomAppBar(
                     navController = navController,
                     currentRoute = currentRoute
