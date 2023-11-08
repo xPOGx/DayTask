@@ -1,5 +1,6 @@
 package com.example.daytask.ui.screens.details
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,14 +43,16 @@ fun TaskDetailBody(
     modifier: Modifier = Modifier,
     uiState: TaskDetailsUiState,
     updateSubTask: (String, Boolean) -> Unit,
+    finishTask: () -> Unit,
     showDialog: () -> Unit
 ) {
     val task = uiState.task
     var paddingBottom by remember { mutableStateOf(0.dp) }
 
-    AddSubTaskBox(
+    FinishBox(
         changedSize = { paddingBottom = it },
-        onClick = showDialog
+        titleRes = if (uiState.task.taskComplete) R.string.make_active else R.string.finish_task,
+        onClick = finishTask
     )
 
     Column(
@@ -84,6 +87,13 @@ fun TaskDetailBody(
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))
             ) {
+                MainButton(
+                    onClick = showDialog,
+                    text = stringResource(R.string.add_subtask),
+                    modifier = Modifier
+                        .background(Tertiary)
+                        .fillMaxWidth()
+                )
                 task.subTasksList.forEach {
                     SubTaskCard(
                         subtask = it,
@@ -97,10 +107,11 @@ fun TaskDetailBody(
 }
 
 @Composable
-fun AddSubTaskBox(
+fun FinishBox(
     modifier: Modifier = Modifier,
     changedSize: (Dp) -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    @StringRes titleRes: Int
 ) {
     val density = LocalDensity.current.density
     val padding = dimensionResource(R.dimen.big)
@@ -110,7 +121,7 @@ fun AddSubTaskBox(
     ) {
         MainButton(
             onClick = onClick,
-            text = stringResource(R.string.add_subtask),
+            text = stringResource(titleRes),
             modifier = Modifier
                 .background(Tertiary)
                 .fillMaxWidth()

@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import com.google.android.gms.tasks.Task as GmsTask
 
 class TaskDetailsViewModel(
     savedStateHandle: SavedStateHandle
@@ -71,6 +72,15 @@ class TaskDetailsViewModel(
     fun validTitle(): Boolean = _uiState.value.title.isNotBlank()
 
     fun updateUiState(uiState: TaskDetailsUiState) = _uiState.update { uiState }
+
+    fun finishTask(): GmsTask<Void> {
+        val task = _uiState.value.task
+        return FirebaseManager.updateTask(
+            userId,
+            taskId,
+            task.copy(taskComplete = !task.taskComplete)
+        )
+    }
 }
 
 data class TaskDetailsUiState(

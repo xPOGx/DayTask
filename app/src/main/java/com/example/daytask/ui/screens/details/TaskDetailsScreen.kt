@@ -14,6 +14,7 @@ import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
 import com.example.daytask.ui.AppViewModelProvider
 import com.example.daytask.ui.screens.tools.LoadingDialog
+import com.example.daytask.util.MathManager
 import com.example.daytask.util.Status
 
 object TaskDetailsNavigation : NavigationDestination {
@@ -31,6 +32,7 @@ fun TaskDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
 
     if (showDialog) {
         DetailDialog(
@@ -45,6 +47,21 @@ fun TaskDetailsScreen(
         )
     }
 
+    if (showAlert) {
+        val task = uiState.task
+        DetailAlert(
+            title = task.title,
+            taskComplete = task.taskComplete,
+            completePercentage = MathManager.countCompletePercentage(task.subTasksList),
+            closeAlert = { showAlert = false },
+            finishTask = {
+                viewModel.finishTask()
+                showAlert = false
+                navigateUp()
+            }
+        )
+    }
+
     when (uiState.status) {
         Status.Loading -> LoadingDialog()
         Status.Error -> {
@@ -56,6 +73,7 @@ fun TaskDetailsScreen(
             TaskDetailBody(
                 uiState = uiState,
                 updateSubTask = viewModel::updateSubtask,
+                finishTask = { showAlert = true },
                 showDialog = { showDialog = true },
                 modifier = modifier
             )
