@@ -24,8 +24,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -49,7 +49,6 @@ import com.example.daytask.util.MathManager
 import com.example.daytask.util.Status
 
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeBody(
     modifier: Modifier = Modifier,
@@ -184,6 +183,7 @@ fun CompletedTasksListRow(
                         memberList = task.memberList,
                         containerColor = if (first) MainColor else Secondary,
                         textColor = if (first) Black else White,
+                        completePercentage = MathManager.countCompletePercentage(task.subTasksList),
                         cardWidth = cardWidth
                     )
                 }
@@ -274,7 +274,8 @@ fun EmptyText(
 fun CompleteLine(
     modifier: Modifier = Modifier,
     textColor: Color,
-    lineWidth: Float
+    lineWidth: Float,
+    completePercentage: Float
 ) {
     Column(modifier = modifier) {
         Row(
@@ -290,7 +291,7 @@ fun CompleteLine(
                 color = textColor
             )
             Text(
-                text = stringResource(R.string._100),
+                text = stringResource(R.string.percentage, (completePercentage * 100).toInt()),
                 style = SmallPercentageText,
                 color = textColor
             )
@@ -313,7 +314,9 @@ fun HomeLoading(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .rotate((Math.random() * 360).toFloat())
     ) {
         CircularProgressIndicator()
     }
