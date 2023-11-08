@@ -87,17 +87,23 @@ fun TaskDetailBody(
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))
             ) {
-                MainButton(
-                    onClick = showDialog,
-                    text = stringResource(R.string.add_subtask),
-                    modifier = Modifier
-                        .background(Tertiary)
-                        .fillMaxWidth()
-                )
+                if (!task.taskComplete) {
+                    MainButton(
+                        onClick = showDialog,
+                        text = stringResource(R.string.add_subtask),
+                        modifier = Modifier
+                            .background(Tertiary)
+                            .fillMaxWidth()
+                    )
+                }
                 task.subTasksList.forEach {
                     SubTaskCard(
                         subtask = it,
-                        actionSubTask = { updateSubTask(it.id, !it.completed) }
+                        actionSubTask = {
+                            if (!task.taskComplete) {
+                                updateSubTask(it.id, !it.completed)
+                            }
+                        }
                     )
                 }
                 Spacer(modifier = Modifier)
