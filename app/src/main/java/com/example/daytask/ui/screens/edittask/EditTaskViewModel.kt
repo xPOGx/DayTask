@@ -87,14 +87,15 @@ class EditTaskViewModel(
     fun validSave(): Boolean = haveChanges() && contentValidation()
 
     fun updateTask(): GmsTask<Void> {
-        val state = _uiState.value
-        val newTask = Task(
-            title = state.newTitle,
-            detail = state.newDetail,
-            date = state.newDate,
-            memberList = state.newMembersList,
-            subTasksList = state.newSubTasksList
-        )
+        val newTask = with(_uiState.value) {
+            task.copy(
+                title = newTitle,
+                detail = newDetail,
+                date = newDate,
+                memberList = newMembersList,
+                subTasksList = newSubTasksList
+            )
+        }
 
         return FirebaseManager.updateTask(userId, taskId, newTask)
     }

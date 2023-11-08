@@ -43,7 +43,8 @@ object FirebaseManager {
                     "detail" to task.detail,
                     "date" to task.date,
                     "memberList" to task.memberList,
-                    "subTasksList" to task.subTasksList
+                    "subTasksList" to task.subTasksList,
+                    "taskComplete" to task.taskComplete
                 )
             )
     }
