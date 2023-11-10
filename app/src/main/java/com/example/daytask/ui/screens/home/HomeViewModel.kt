@@ -13,7 +13,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -39,13 +37,15 @@ class HomeViewModel : ViewModel() {
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 _uiState.update { it.copy(status = Status.Loading) }
-                val tasksList = snapshot.toTaskList()
+                val tasksList = snapshot.toTaskList().sortedBy { it.date }
                 viewModelScope.launch(Dispatchers.IO) {
                     fetchMembersInfo(tasksList)
                 }
                 _uiState.update { state ->
                     state.copy(
-                        tasksList = tasksList.sortedBy { it.date },
+                        tasksList = tasksList,
+                        ongoingTasks = tasksList.filter { !it.taskComplete },
+                        completeTasks = tasksList.filter { it.taskComplete },
                         status = Status.Done
                     )
                 }
@@ -60,7 +60,6 @@ class HomeViewModel : ViewModel() {
 
     private suspend fun fetchMembersInfo(tasksList: List<Task>) {
         val cache = mutableListOf<User>()
-        val time = Calendar.getInstance().timeInMillis
         val list = tasksList.map { task ->
             task.copy(
                 memberList = task.memberList.map { user ->
@@ -73,8 +72,8 @@ class HomeViewModel : ViewModel() {
                         val task2 = ref.child("photoUrl").get()
                         task1.await()
                         task2.await()
-                        val name = task1.result.getValue<String>()
-                        val photoUrl = task2.result.getValue<String>()
+                        val name = task1.result.getValue(String::class.java)
+                        val photoUrl = task2.result.getValue(String::class.java)
                         user.copy(
                             displayName = name,
                             photoUrl = photoUrl
@@ -86,8 +85,6 @@ class HomeViewModel : ViewModel() {
         if (tasksList != list) {
             ref.setValue(list)
         }
-        val time2 = Calendar.getInstance().timeInMillis
-        Log.d("Task End", "All time: ${time2 - time}")
     }
 
     fun updateUiState(uiState: HomeUiState) = _uiState.update { uiState }
@@ -137,6 +134,8 @@ class HomeViewModel : ViewModel() {
 data class HomeUiState(
     val user: FirebaseUser = Firebase.auth.currentUser!!,
     val tasksList: List<Task> = listOf(),
+    val ongoingTasks: List<Task> = listOf(),
+    val completeTasks: List<Task> = listOf(),
     val filteredTasksList: List<Task> = listOf(),
     val status: Status = Status.Loading,
     val query: String = "",
