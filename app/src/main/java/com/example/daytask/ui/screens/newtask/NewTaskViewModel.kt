@@ -56,7 +56,10 @@ class NewTaskViewModel : ViewModel() {
         FirebaseManager.uploadTask(Firebase.auth.currentUser!!.uid, newTask)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    updateUiState(_uiState.value.copy(updateResult = true))
+                    updateUiState(_uiState.value.copy(
+                        updateResult = true,
+                        status = Status.Done
+                    ))
                 } else updateStatus(Status.Done)
                 notifyUser(task, context)
             }
