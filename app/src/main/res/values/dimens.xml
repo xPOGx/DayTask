@@ -13,4 +13,6 @@
     <dimen name="image_big">136.dp</dimen>
     <dimen name="large_ellipse">142.dp</dimen>
     <dimen name="menu_item_width">124.dp</dimen>
+    <dimen name="date_card_width">45.dp</dimen>
+    <dimen name="date_card_height">69.dp</dimen>
 </resources>

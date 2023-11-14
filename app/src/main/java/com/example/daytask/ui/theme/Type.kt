@@ -78,6 +78,13 @@ val SmallInputText = TextStyle(
     fontWeight = FontWeight.W400
 )
 
+val CalendarCardText = TextStyle(
+    fontSize = 12.sp,
+    lineHeight = 21.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W400
+)
+
 val ProjectDetailText = TextStyle(
     fontSize = 12.sp,
     lineHeight = 18.5.sp,
@@ -114,6 +121,13 @@ val InputText = TextStyle(
 )
 
 //W500
+val WeekText = TextStyle(
+    fontSize = 9.41.sp,
+    lineHeight = 16.2.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W500
+)
+
 val ProjectInfoText = TextStyle(
     fontSize = 11.sp,
     lineHeight = 21.5.sp,
@@ -195,6 +209,13 @@ val DetailsDateText = TextStyle(
 val ButtonText = TextStyle(
     fontSize = 18.sp,
     lineHeight = 38.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W600
+)
+
+val MonthText = TextStyle(
+    fontSize = 18.82.sp,
+    lineHeight = 22.48.sp,
     fontFamily = Inter,
     fontWeight = FontWeight.W600
 )
