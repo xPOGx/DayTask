@@ -10,8 +10,3 @@ data class Task(
     val taskComplete: Boolean = false
 )
 
-data class SubTask(
-    val id: String = "",
-    val title: String = "",
-    val completed: Boolean = false
-)

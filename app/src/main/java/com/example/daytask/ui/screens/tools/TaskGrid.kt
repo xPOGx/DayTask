@@ -1,6 +1,5 @@
 package com.example.daytask.ui.screens.tools
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -87,7 +86,7 @@ fun TaskGrid(
             TeamGridCard(
                 removeMember = { removeMember(it) },
                 userName = it.displayName,
-                userPhoto = Uri.parse(it.photoUrl)
+                userPhoto = it.photoUrl
             )
         }
         item {

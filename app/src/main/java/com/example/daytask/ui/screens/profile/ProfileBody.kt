@@ -1,7 +1,6 @@
 package com.example.daytask.ui.screens.profile
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,7 @@ import com.example.daytask.ui.screens.tools.MainButton
 fun ProfileBody(
     modifier: Modifier = Modifier,
     signOut: () -> Unit,
-    userPhoto: Uri?,
+    userPhoto: String?,
     userName: String?,
     userEmail: String?,
     saveImage: (Bitmap) -> Unit,

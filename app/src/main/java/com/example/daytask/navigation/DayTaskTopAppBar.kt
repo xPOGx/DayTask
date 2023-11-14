@@ -1,9 +1,5 @@
 package com.example.daytask.navigation
 
-import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,14 +12,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.daytask.R
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
@@ -40,63 +34,41 @@ import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.NavText
 import com.example.daytask.ui.theme.UserNameText
 import com.example.daytask.ui.theme.WelcomeText
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.daytask.ui.theme.White
+import com.example.daytask.util.FirebaseManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DayTaskTopAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    topBarState: Boolean,
-    currentItemId: String
+    currentItemId: String,
+    currentRoute: String
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val titleRes: Int = chooseTitle(navBackStackEntry?.destination?.route ?: HomeDestination.route)
+    when (currentRoute) {
+        HomeDestination.route -> {
+            HomeTopBar(
+                navigateToProfile = { navController.navigate(ProfileDestination.route) },
+                userName = FirebaseManager.userName,
+                userPhoto = FirebaseManager.userPhoto,
+                modifier = modifier.padding(dimensionResource(R.dimen.big))
+            )
+        }
 
-    AnimatedVisibility(
-        visible = topBarState,
-        enter = slideInVertically { -it },
-        exit = slideOutVertically { -it }
-    ) {
-        when (navBackStackEntry?.destination?.route) {
-            HomeDestination.route -> {
-                val user = Firebase.auth.currentUser!!
-                HomeTopBar(
-                    navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                    userName = user.displayName,
-                    userPhoto = user.photoUrl,
-                    modifier = Modifier.padding(dimensionResource(R.dimen.big))
-                )
-            }
-
-            else -> {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(titleRes),
-                            style = NavText
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                when (titleRes) {
-                                    ProfileDestination.titleRes, TaskDetailsNavigation.titleRes,
-                                    EditTaskNavigation.titleRes -> navController.navigateUp()
-                                    else -> navController.popBackStack(HomeDestination.route, false)
-                                }
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_arrowleft),
-                                contentDescription = stringResource(R.string.back_button),
-                                tint = Color.Unspecified
-                            )
-                        }
-                    },
-                    actions = {
-                        if (titleRes == TaskDetailsNavigation.titleRes) {
+        else -> {
+            CenterAlignedTopAppBar(
+                title = {
+                    NavTitle(currentRoute = currentRoute)
+                },
+                navigationIcon = {
+                    NavIcon(
+                        currentRoute = currentRoute,
+                        navController = navController
+                    )
+                },
+                actions = {
+                    when (currentRoute) {
+                        TaskDetailsNavigation.routeWithArgs -> {
                             IconButton(
                                 onClick = {
                                     navController.navigate("${EditTaskNavigation.route}/$currentItemId")
@@ -109,15 +81,78 @@ fun DayTaskTopAppBar(
                                 )
                             }
                         }
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Background
-                    ),
-                    modifier = modifier
-                )
-            }
+
+                        CalendarDestination.route -> {
+                            IconButton(
+                                onClick = {
+                                    navController.navigate(NewTaskDestination.route)
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_add_square),
+                                    contentDescription = null,
+                                    tint = White
+                                )
+                            }
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Background
+                ),
+                modifier = modifier
+            )
         }
     }
+}
+
+@Composable
+fun NavIcon(
+    modifier: Modifier = Modifier,
+    currentRoute: String,
+    navController: NavHostController
+) {
+    IconButton(
+        onClick = {
+            when (currentRoute) {
+                ProfileDestination.route, NewTaskDestination.route, TaskDetailsNavigation.routeWithArgs,
+                EditTaskNavigation.routeWithArgs -> navController.navigateUp()
+
+                else -> navController.popBackStack(HomeDestination.route, false)
+            }
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_arrowleft),
+            contentDescription = stringResource(R.string.back_button),
+            tint = Color.Unspecified
+        )
+    }
+}
+
+@Composable
+fun NavTitle(
+    modifier: Modifier = Modifier,
+    currentRoute: String
+) {
+    val titleRes = when (currentRoute) {
+        HomeDestination.route -> HomeDestination.titleRes
+        ProfileDestination.route -> ProfileDestination.titleRes
+        MessageDestination.route -> MessageDestination.titleRes
+        CalendarDestination.route -> CalendarDestination.titleRes
+        NotificationDestination.route -> NotificationDestination.titleRes
+        NewTaskDestination.route -> NewTaskDestination.titleRes
+        TaskDetailsNavigation.routeWithArgs -> TaskDetailsNavigation.titleRes
+        EditTaskNavigation.routeWithArgs -> EditTaskNavigation.titleRes
+        else -> HomeDestination.titleRes
+    }
+
+    Text(
+        text = stringResource(titleRes),
+        style = NavText,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -125,7 +160,7 @@ fun HomeTopBar(
     modifier: Modifier = Modifier,
     navigateToProfile: () -> Unit,
     userName: String?,
-    userPhoto: Uri?
+    userPhoto: String?
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
@@ -152,16 +187,4 @@ fun HomeTopBar(
             userPhoto = userPhoto
         )
     }
-}
-
-private fun chooseTitle(route: String): Int = when (route) {
-    HomeDestination.route -> HomeDestination.titleRes
-    ProfileDestination.route -> ProfileDestination.titleRes
-    MessageDestination.route -> MessageDestination.titleRes
-    CalendarDestination.route -> CalendarDestination.titleRes
-    NotificationDestination.route -> NotificationDestination.titleRes
-    NewTaskDestination.route -> NewTaskDestination.titleRes
-    TaskDetailsNavigation.routeWithArgs -> TaskDetailsNavigation.titleRes
-    EditTaskNavigation.routeWithArgs -> EditTaskNavigation.titleRes
-    else -> HomeDestination.titleRes
 }

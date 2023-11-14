@@ -91,4 +91,10 @@
     <string name="edit_task">Edit Task</string>
     <string name="must_be_at_least_one_member">Must be at least one member</string>
     <string name="save_changes">Save changes</string>
+    <string name="make_active">Make Active</string>
+    <string name="activate">Activate</string>
+    <string name="finish">Finish</string>
+    <string name="uncompleted_subtasks">You have uncompleted subtasks.</string>
+    <string name="complete_task">Are you sure, you want to %1$s task? %2$s</string>
+    <string name="today_task">Today’s Tasks</string>
 </resources>

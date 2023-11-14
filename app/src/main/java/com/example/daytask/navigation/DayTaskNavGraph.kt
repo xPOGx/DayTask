@@ -1,6 +1,10 @@
 package com.example.daytask.navigation
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -40,57 +44,45 @@ fun DayTaskNavHost(
     navController: NavHostController,
     navigateToAuth: () -> Unit
 ) {
-    var bottomBarState by remember { mutableStateOf(false) }
-    var topBarState by remember { mutableStateOf(false) }
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    var bottomBarState by remember { mutableStateOf(true) }
     var currentItemId by remember { mutableStateOf("") }
 
-    when (navBackStackEntry?.destination?.route) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route ?: HomeDestination.route
+
+    bottomBarState = when (currentRoute) {
         HomeDestination.route, MessageDestination.route, CalendarDestination.route,
-        NotificationDestination.route -> {
-            topBarState = true
-            bottomBarState = true
-        }
+        NotificationDestination.route -> true
 
-        ProfileDestination.route, NewTaskDestination.route, TaskDetailsNavigation.routeWithArgs,
-        EditTaskNavigation.routeWithArgs -> {
-            topBarState = true
-            bottomBarState = false
-        }
-
-        else -> {
-            topBarState = false
-            bottomBarState = false
-        }
+        else -> false
     }
 
     Scaffold(
         topBar = {
             DayTaskTopAppBar(
                 navController = navController,
-                topBarState = topBarState,
+                currentRoute = currentRoute,
                 currentItemId = currentItemId
             )
         },
         bottomBar = {
-            DayTaskBottomAppBar(
-                navController = navController,
-                bottomBarState = bottomBarState,
-                navigateToHome = { navController.popBackStack(HomeDestination.route, false) },
-                navigateToChat = { navController.navigate(MessageDestination.route) },
-                navigateToNewTask = { navController.navigate(NewTaskDestination.route) },
-                navigateToCalender = { navController.navigate(CalendarDestination.route) },
-                navigateToNotification = { navController.navigate(NotificationDestination.route) }
-            )
+            AnimatedVisibility(
+                visible = bottomBarState,
+                enter = slideInVertically { it } + expandVertically(),
+                exit = shrinkVertically() + slideOutVertically { it }
+            ) {
+                DayTaskBottomAppBar(
+                    navController = navController,
+                    currentRoute = currentRoute
+                )
+            }
         },
         modifier = modifier
     ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = HomeDestination.route,
-            modifier = Modifier
-                .padding(paddingValues)
-                .animateContentSize()
+            modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = HomeDestination.route) {
                 HomeScreen(
@@ -116,6 +108,10 @@ fun DayTaskNavHost(
             }
             composable(route = CalendarDestination.route) {
                 CalendarScreen(
+                    navigateToTaskDetail = { id ->
+                        currentItemId = id
+                        navController.navigate("${TaskDetailsNavigation.route}/$id")
+                    },
                     onBack = { navController.popBackStack(HomeDestination.route, false) }
                 )
             }

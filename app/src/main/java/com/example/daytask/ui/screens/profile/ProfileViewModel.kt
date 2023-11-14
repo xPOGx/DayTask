@@ -13,7 +13,6 @@ import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
 import com.example.daytask.util.Status
 import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -29,7 +28,7 @@ import java.util.UUID
 class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
-    val disabled = Firebase.auth.currentUser!!.providerData
+    val disabled = FirebaseManager.currentUser.providerData
         .asSequence().map { it.providerId }.contains("google.com")
 
     fun updateUserName(context: Context) {
@@ -64,7 +63,7 @@ class ProfileViewModel : ViewModel() {
 
         val uuid = UUID.randomUUID().toString()
         val imageRef = Firebase.storage.reference
-            .child("users/${_uiState.value.user.uid}/images/$uuid")
+            .child("users/${FirebaseManager.userId}/images/$uuid")
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
@@ -172,13 +171,13 @@ class ProfileViewModel : ViewModel() {
         val name = _uiState.value.userName
         return name.isNotBlank()
                 && name.length >= Constants.NAME_LENGTH
-                && name != _uiState.value.user.displayName
+                && name != FirebaseManager.userName
     }
 
     fun checkEmail(): Boolean {
         val email = _uiState.value.userEmail
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                && email != _uiState.value.user.email
+                && email != FirebaseManager.userEmail
     }
 
     fun checkPassword(): Boolean {
@@ -203,7 +202,6 @@ class ProfileViewModel : ViewModel() {
 }
 
 data class ProfileUiState(
-    val user: FirebaseUser = Firebase.auth.currentUser!!,
     val userName: String = "",
     val userEmail: String = "",
     val userPassword: String = "",

@@ -6,7 +6,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -37,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.daytask.R
 import com.example.daytask.data.Task
+import com.example.daytask.ui.screens.tools.LoadingScreen
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.NewTaskHeadlineText
@@ -49,7 +47,6 @@ import com.example.daytask.util.MathManager
 import com.example.daytask.util.Status
 
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeBody(
     modifier: Modifier = Modifier,
@@ -80,21 +77,21 @@ fun HomeBody(
             ) {
                 HomeContentCards(
                     headlineTextRes = R.string.completed_tasks,
-                    onSeeAllClick = { /*TODO: see all Completed Tasks*/ }
+                    onSeeAllClick = { /*TODO: see all Completed Tasks*/ },
+                    status = uiState.status
                 ) {
                     CompletedTasksListRow(
-                        status = uiState.status,
-                        tasksList = uiState.tasksList.filter { it.taskComplete },
+                        tasksList = uiState.completeTasks,
                         navigateToDetails = navigateToDetails
                     )
                 }
                 HomeContentCards(
                     headlineTextRes = R.string.ongoing_projects,
-                    onSeeAllClick = { /*TODO: see all Ongoing Projects*/ }
+                    onSeeAllClick = { /*TODO: see all Ongoing Projects*/ },
+                    status = uiState.status
                 ) {
                     ActiveTasksListColumn(
-                        status = uiState.status,
-                        tasksList = uiState.tasksList.filter { !it.taskComplete },
+                        tasksList = uiState.ongoingTasks,
                         navigateToDetails = navigateToDetails
                     )
                 }
@@ -115,6 +112,7 @@ fun HomeContentCards(
     modifier: Modifier = Modifier,
     headlineTextRes: Int,
     onSeeAllClick: () -> Unit,
+    status: Status,
     content: @Composable () -> Unit,
 ) {
     Column(modifier) {
@@ -123,7 +121,8 @@ fun HomeContentCards(
             onSeeAllClick = onSeeAllClick,
             modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
         )
-        content()
+        if (status == Status.Loading) LoadingScreen(Modifier.fillMaxWidth())
+        else content()
     }
 }
 
@@ -161,32 +160,28 @@ fun HomeHeadline(
 @Composable
 fun CompletedTasksListRow(
     modifier: Modifier = Modifier,
-    status: Status,
     tasksList: List<Task>,
     navigateToDetails: (String) -> Unit
 ) {
-    if (status == Status.Loading) HomeLoading(modifier)
+    if (tasksList.isEmpty()) EmptyText()
     else {
-        if (tasksList.isEmpty()) {
-            EmptyText()
-        } else {
-            val screenWidth = LocalConfiguration.current.screenWidthDp
-            val cardWidth = screenWidth / 2
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
-                modifier = modifier
-            ) {
-                items(tasksList) { task ->
-                    val first = task == tasksList.first()
-                    CompletedCard(
-                        onCardClick = { navigateToDetails(task.id) },
-                        title = task.title,
-                        memberList = task.memberList,
-                        containerColor = if (first) MainColor else Secondary,
-                        textColor = if (first) Black else White,
-                        cardWidth = cardWidth
-                    )
-                }
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+        val cardWidth = screenWidth / 2
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
+            modifier = modifier
+        ) {
+            items(tasksList) { task ->
+                val first = task == tasksList.first()
+                CompletedCard(
+                    onCardClick = { navigateToDetails(task.id) },
+                    title = task.title,
+                    memberList = task.memberList,
+                    containerColor = if (first) MainColor else Secondary,
+                    textColor = if (first) Black else White,
+                    completePercentage = MathManager.countCompletePercentage(task.subTasksList),
+                    cardWidth = cardWidth
+                )
             }
         }
     }
@@ -195,30 +190,25 @@ fun CompletedTasksListRow(
 @Composable
 fun ActiveTasksListColumn(
     modifier: Modifier = Modifier,
-    status: Status,
     tasksList: List<Task>,
     navigateToDetails: (String) -> Unit
 ) {
-    if (status == Status.Loading) HomeLoading(modifier)
+    if (tasksList.isEmpty()) EmptyText()
     else {
-        if (tasksList.isEmpty()) {
-            EmptyText(modifier)
-        } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
-                modifier = modifier
-            ) {
-                tasksList.forEach { task ->
-                    OngoingCard(
-                        onCardClick = { navigateToDetails(task.id) },
-                        title = task.title,
-                        memberList = task.memberList,
-                        date = task.date,
-                        percentage = MathManager.countCompletePercentage(task.subTasksList)
-                    )
-                }
-                Spacer(modifier = Modifier)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
+            modifier = modifier
+        ) {
+            tasksList.forEach { task ->
+                OngoingCard(
+                    onCardClick = { navigateToDetails(task.id) },
+                    title = task.title,
+                    memberList = task.memberList,
+                    date = task.date,
+                    percentage = MathManager.countCompletePercentage(task.subTasksList)
+                )
             }
+            Spacer(modifier = Modifier)
         }
     }
 }
@@ -274,7 +264,8 @@ fun EmptyText(
 fun CompleteLine(
     modifier: Modifier = Modifier,
     textColor: Color,
-    lineWidth: Float
+    lineWidth: Float,
+    completePercentage: Float
 ) {
     Column(modifier = modifier) {
         Row(
@@ -290,7 +281,7 @@ fun CompleteLine(
                 color = textColor
             )
             Text(
-                text = stringResource(R.string._100),
+                text = stringResource(R.string.percentage, (completePercentage * 100).toInt()),
                 style = SmallPercentageText,
                 color = textColor
             )
@@ -304,17 +295,5 @@ fun CompleteLine(
                 cap = StrokeCap.Round
             )
         }
-    }
-}
-
-@Composable
-fun HomeLoading(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        CircularProgressIndicator()
     }
 }

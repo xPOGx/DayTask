@@ -1,6 +1,5 @@
 package com.example.daytask.ui.screens.newtask
 
-import android.net.Uri
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -29,7 +28,7 @@ fun TeamGridCard(
     modifier: Modifier = Modifier,
     removeMember: () -> Unit,
     userName: String?,
-    userPhoto: Uri?
+    userPhoto: String?
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Secondary),

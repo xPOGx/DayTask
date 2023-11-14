@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
 import com.example.daytask.ui.screens.tools.LoadingDialog
+import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.Status
 
 object ProfileDestination : NavigationDestination {
@@ -41,9 +42,9 @@ fun ProfileScreen(
 
     ProfileBody(
         signOut = signOut,
-        userName = uiState.user.displayName,
-        userEmail = uiState.user.email,
-        userPhoto = uiState.user.photoUrl,
+        userName = FirebaseManager.userName,
+        userEmail = FirebaseManager.userEmail,
+        userPhoto = FirebaseManager.userPhoto,
         saveImage = { viewModel.updateUserAvatar(context, it) },
         changeName = { showChangeName = true },
         changeEmail = { showChangeEmail = true },

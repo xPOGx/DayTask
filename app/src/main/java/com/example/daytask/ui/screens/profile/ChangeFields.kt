@@ -6,8 +6,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.example.daytask.R
-import com.example.daytask.util.Constants
 import com.example.daytask.ui.screens.tools.InputField
+import com.example.daytask.util.Constants
+import com.example.daytask.util.FirebaseManager
 
 @Composable
 fun ChangeUserNameField(
@@ -45,7 +46,7 @@ fun ChangeUserEmailField(
         inputText = uiState.userEmail,
         onValueChange = { updateUiState(uiState.copy(userEmail = it)) },
         leadingIconRes = R.drawable.ic_usertag_profile,
-        errorTextRes = if (uiState.userEmail == uiState.user.email)
+        errorTextRes = if (uiState.userEmail == FirebaseManager.userEmail)
             R.string.different else R.string.invalid_email,
         validation = emailValidation,
         modifier = modifier

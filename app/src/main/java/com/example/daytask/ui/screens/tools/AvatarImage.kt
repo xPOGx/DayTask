@@ -1,6 +1,5 @@
 package com.example.daytask.ui.screens.tools
 
-import android.net.Uri
 import androidx.annotation.DimenRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,7 +20,7 @@ import com.example.daytask.util.ImageLoaderManager.getImageLoader
 fun AvatarImage(
     modifier: Modifier = Modifier,
     onImageClick: () -> Unit = { /*ignore*/ },
-    userPhoto: Uri?,
+    userPhoto: String?,
     @DimenRes avatarSizeRes: Int
 ) {
     val context = LocalContext.current
@@ -31,7 +30,7 @@ fun AvatarImage(
         .memoryCacheKey(userPhoto.toString())
         .crossfade(true)
         .placeholder(R.drawable.ic_user)
-        .error(R.drawable.ic_close_square)
+        .error(R.drawable.ic_user)
         .build()
     val imageLoader = getImageLoader(context)
     AsyncImage(

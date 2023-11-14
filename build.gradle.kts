@@ -2,9 +2,10 @@
 buildscript {
     extra.apply {
         set("nav_version", "2.7.3")
-        set("room_version", "2.5.2")
+        set("room_version", "2.6.0")
         set("lifecycle_version", "2.6.2")
-        set("bom_version", "2023.09.00")
+        set("compose_bom_version", "2023.09.00")
+        set("firebase_bom_version", "32.5.0")
     }
 }
 

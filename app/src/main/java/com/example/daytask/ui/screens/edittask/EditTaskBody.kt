@@ -37,13 +37,8 @@ fun EditTaskBody(
                 updateUiState(
                     uiState.copy(
                         newSubTasksList = uiState.newSubTasksList.map {
-                            if (it == lastSubTask) {
-                                SubTask(
-                                    it.id,
-                                    uiState.newSubTaskTitle,
-                                    it.completed
-                                )
-                            } else it
+                            if (it == lastSubTask) it.copy(title = uiState.newSubTaskTitle)
+                            else it
                         }
                     )
                 )
@@ -87,9 +82,9 @@ fun EditTaskBody(
             )
         },
         showDialog = {
-            showDialog = true
-            updateUiState(uiState.copy(newSubTaskTitle = it.title))
             lastSubTask = it
+            updateUiState(uiState.copy(newSubTaskTitle = it.title))
+            showDialog = true
         },
         editMode = true,
         buttonHeadline = stringResource(R.string.save_changes),

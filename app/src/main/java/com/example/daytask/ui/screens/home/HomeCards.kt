@@ -98,11 +98,13 @@ fun CompletedCard(
     memberList: List<User>,
     containerColor: Color,
     textColor: Color,
-    cardWidth: Int
+    cardWidth: Int,
+    completePercentage: Float
 ) {
     val density = LocalDensity.current.density
-    val pad = 16 * density
-    val lineWidth = cardWidth * density - pad
+    val columnPadding = dimensionResource(R.dimen.small)
+    val paddingPixels = columnPadding.value * 2 * density
+    val lineWidth = (cardWidth * density - paddingPixels) * completePercentage
 
     Card(
         colors = CardDefaults.cardColors(containerColor = containerColor),
@@ -117,7 +119,7 @@ fun CompletedCard(
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),
-            modifier = Modifier.padding(dimensionResource(R.dimen.small))
+            modifier = Modifier.padding(columnPadding)
         ) {
             Text(
                 text = title,
@@ -140,7 +142,8 @@ fun CompletedCard(
             }
             CompleteLine(
                 textColor = textColor,
-                lineWidth = lineWidth
+                lineWidth = lineWidth,
+                completePercentage = completePercentage
             )
         }
     }
