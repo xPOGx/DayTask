@@ -2,12 +2,18 @@ package com.example.daytask.util
 
 import com.example.daytask.data.SubTask
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.example.daytask.data.Task as newTask
 
 object FirebaseManager {
     private val database = Firebase.database.reference
+    val currentUser = Firebase.auth.currentUser!!
+    val userId = currentUser.uid
+    val userName = currentUser.displayName
+    val userPhoto = currentUser.photoUrl?.toString()
+    val userEmail = currentUser.email
     fun updateUserName(uid: String, name: String?) {
         database.child("users/$uid/displayName")
             .setValue(name)

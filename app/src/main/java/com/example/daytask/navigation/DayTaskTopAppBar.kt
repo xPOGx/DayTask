@@ -1,6 +1,5 @@
 package com.example.daytask.navigation
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,8 +35,7 @@ import com.example.daytask.ui.theme.NavText
 import com.example.daytask.ui.theme.UserNameText
 import com.example.daytask.ui.theme.WelcomeText
 import com.example.daytask.ui.theme.White
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.daytask.util.FirebaseManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,11 +47,10 @@ fun DayTaskTopAppBar(
 ) {
     when (currentRoute) {
         HomeDestination.route -> {
-            val user = Firebase.auth.currentUser!!
             HomeTopBar(
                 navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                userName = user.displayName,
-                userPhoto = user.photoUrl,
+                userName = FirebaseManager.userName,
+                userPhoto = FirebaseManager.userPhoto,
                 modifier = modifier.padding(dimensionResource(R.dimen.big))
             )
         }
@@ -163,7 +160,7 @@ fun HomeTopBar(
     modifier: Modifier = Modifier,
     navigateToProfile: () -> Unit,
     userName: String?,
-    userPhoto: Uri?
+    userPhoto: String?
 ) {
     Row(
         modifier = modifier.fillMaxWidth()

@@ -2,7 +2,6 @@ package com.example.daytask.ui.screens.profile
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -33,7 +32,7 @@ import com.example.daytask.ui.theme.MainColor
 @Composable
 fun ProfileAvatar(
     modifier: Modifier = Modifier,
-    userPhoto: Uri?,
+    userPhoto: String?,
     saveImage: (Bitmap) -> Unit
 ) {
     val context = LocalContext.current
