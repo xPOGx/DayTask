@@ -69,7 +69,7 @@ fun DayTaskNavHost(
             AnimatedVisibility(
                 visible = bottomBarState,
                 enter = slideInVertically { it } + expandVertically(),
-                exit =  shrinkVertically() + slideOutVertically { it }
+                exit = shrinkVertically() + slideOutVertically { it }
             ) {
                 DayTaskBottomAppBar(
                     navController = navController,
