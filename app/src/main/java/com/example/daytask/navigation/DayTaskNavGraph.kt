@@ -108,6 +108,10 @@ fun DayTaskNavHost(
             }
             composable(route = CalendarDestination.route) {
                 CalendarScreen(
+                    navigateToTaskDetail = { id ->
+                        currentItemId = id
+                        navController.navigate("${TaskDetailsNavigation.route}/$id")
+                    },
                     onBack = { navController.popBackStack(HomeDestination.route, false) }
                 )
             }
