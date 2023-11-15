@@ -12,18 +12,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.daytask.R
 import com.example.daytask.ui.screens.tools.MainButton
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ProfileBody(
     modifier: Modifier = Modifier,
     signOut: () -> Unit,
-    userPhoto: String?,
-    userName: String?,
-    userEmail: String?,
     saveImage: (Bitmap) -> Unit,
-    changeName: () -> Unit,
-    changeEmail: () -> Unit,
-    changePassword: () -> Unit,
+    changeButton: (ChangeKey) -> Unit,
     disabled: Boolean
 ) {
     Column(
@@ -31,23 +28,23 @@ fun ProfileBody(
         modifier = modifier.padding(horizontal = dimensionResource(R.dimen.big))
     ) {
         ProfileAvatar(
-            userPhoto = userPhoto,
+            userPhoto = Firebase.auth.currentUser!!.photoUrl.toString(),
             saveImage = saveImage,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 //        Display Name
         DisabledField(
-            value = userName ?: "",
+            value = Firebase.auth.currentUser!!.displayName,
             placeholderText = stringResource(R.string.user_name),
             leadingIconRes = R.drawable.ic_useradd_profile,
-            changerField = changeName
+            changerField = { changeButton(ChangeKey.NAME) }
         )
 //        Email
         DisabledField(
-            value = userEmail ?: "",
+            value = Firebase.auth.currentUser!!.email,
             placeholderText = stringResource(R.string.user_email),
             leadingIconRes = R.drawable.ic_usertag_profile,
-            changerField = changeEmail,
+            changerField = { changeButton(ChangeKey.EMAIL) },
             disabled = disabled
         )
 //        Password
@@ -55,7 +52,7 @@ fun ProfileBody(
             value = "",
             placeholderText = stringResource(R.string.password),
             leadingIconRes = R.drawable.ic_lock_profile,
-            changerField = changePassword,
+            changerField = { changeButton(ChangeKey.PASSWORD) },
             disabled = disabled
         )
 //        My Tasks
@@ -63,7 +60,7 @@ fun ProfileBody(
             value = stringResource(R.string.my_tasks),
             leadingIconRes = R.drawable.ic_task,
             trailingIconRes = R.drawable.ic_arrow_down_2,
-            changerField = { /*TODO: My tasks list?*/ }
+            changerField = { changeButton(ChangeKey.TASKS) }
         )
 //        Privacy
         DisabledField(

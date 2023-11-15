@@ -3,11 +3,14 @@ package com.example.daytask.ui.screens.profile
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.example.daytask.activity.AuthActivity
 import com.example.daytask.activity.MainActivity
+import com.example.daytask.data.Task
 import com.example.daytask.util.Constants
+import com.example.daytask.util.DataSnapshotManager.toTaskList
 import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
@@ -15,6 +18,10 @@ import com.example.daytask.util.Status
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.ktx.storage
@@ -28,8 +35,31 @@ import java.util.UUID
 class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
-    val disabled = FirebaseManager.currentUser.providerData
+    val disabled = Firebase.auth.currentUser!!.providerData
         .asSequence().map { it.providerId }.contains("google.com")
+
+    private val database = Firebase.database.reference
+    private val userId = Firebase.auth.currentUser!!.uid
+    private val ref = database.child("users/$userId/tasks")
+    private var _tasksList: MutableStateFlow<List<Task>> = MutableStateFlow(emptyList())
+    val tasksList = _tasksList.asStateFlow()
+
+    init {
+        initDB()
+    }
+
+    private fun initDB() {
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tasksList = snapshot.toTaskList().sortedBy { it.date }
+                _tasksList.update { tasksList }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DB Load Error", error.message)
+            }
+        })
+    }
 
     fun updateUserName(context: Context) {
         if (!isNetworkAvailable(context)) {
@@ -45,11 +75,11 @@ class ProfileViewModel : ViewModel() {
         )
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = Firebase.auth.currentUser!!
-                    FirebaseManager.updateUserName(user.uid, user.displayName)
+                    FirebaseManager.updateUserName(
+                        Firebase.auth.currentUser!!.displayName
+                    )
                     updateUiState(_uiState.value.copy(updateResult = true))
-                }
-                else updateStatus(Status.Done)
+                } else updateStatus(Status.Done)
                 notifyUser(task, context)
             }
     }
@@ -63,7 +93,7 @@ class ProfileViewModel : ViewModel() {
 
         val uuid = UUID.randomUUID().toString()
         val imageRef = Firebase.storage.reference
-            .child("users/${FirebaseManager.userId}/images/$uuid")
+            .child("users/${userId}/images/$uuid")
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
@@ -85,11 +115,11 @@ class ProfileViewModel : ViewModel() {
                                 )
                                     .addOnCompleteListener { task3 ->
                                         if (task.isSuccessful) {
-                                            val user = Firebase.auth.currentUser!!
-                                            FirebaseManager.updateUserPhoto(user.uid, user.photoUrl.toString())
+                                            FirebaseManager.updateUserPhoto(
+                                                Firebase.auth.currentUser!!.photoUrl.toString()
+                                            )
                                             updateUiState(_uiState.value.copy(updateResult = true))
-                                        }
-                                        else updateStatus(Status.Done)
+                                        } else updateStatus(Status.Done)
                                         notifyUser(task3, context)
                                     }
                             } else {
@@ -113,7 +143,7 @@ class ProfileViewModel : ViewModel() {
         updateStatus(Status.Loading)
 
         val password = _uiState.value.userPassword
-        val email = Firebase.auth.currentUser!!.email!!
+        val email = Firebase.auth.currentUser!!.email.toString()
         val newEmail = _uiState.value.userEmail.trim()
         val credential = EmailAuthProvider.getCredential(email, password)
         Firebase.auth.currentUser!!.reauthenticate(credential)
@@ -143,7 +173,7 @@ class ProfileViewModel : ViewModel() {
 
         val password = _uiState.value.userPassword
         val newPassword = _uiState.value.newPassword
-        val email = Firebase.auth.currentUser!!.email!!
+        val email = Firebase.auth.currentUser!!.email.toString()
         val credential = EmailAuthProvider.getCredential(email, password)
         Firebase.auth.currentUser!!.reauthenticate(credential)
             .addOnCompleteListener { task ->
@@ -171,13 +201,13 @@ class ProfileViewModel : ViewModel() {
         val name = _uiState.value.userName
         return name.isNotBlank()
                 && name.length >= Constants.NAME_LENGTH
-                && name != FirebaseManager.userName
+                && name != Firebase.auth.currentUser!!.displayName
     }
 
     fun checkEmail(): Boolean {
         val email = _uiState.value.userEmail
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                && email != FirebaseManager.userEmail
+                && email != Firebase.auth.currentUser!!.email
     }
 
     fun checkPassword(): Boolean {
@@ -198,6 +228,12 @@ class ProfileViewModel : ViewModel() {
         val intent = Intent(context, AuthActivity::class.java)
         activity.startActivity(intent)
         activity.finish()
+    }
+
+    fun deleteTask(id: String) {
+        FirebaseManager.deleteTask(id).addOnCompleteListener {
+            if (!it.isSuccessful) Log.e("Firebase Error", it.exception.toString())
+        }
     }
 }
 
