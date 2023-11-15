@@ -62,11 +62,11 @@ class TaskDetailsViewModel(
             title = _uiState.value.title.trim(),
             completed = false
         )
-        FirebaseManager.uploadSubTask(userId, taskId, subTask)
+        FirebaseManager.uploadSubTask(taskId, subTask)
     }
 
     fun updateSubtask(subTaskId: String, completed: Boolean) {
-        FirebaseManager.updateSubTask(userId, taskId, subTaskId, completed)
+        FirebaseManager.updateSubTask(taskId, subTaskId, completed)
     }
 
     fun validTitle(): Boolean = _uiState.value.title.isNotBlank()
@@ -76,7 +76,6 @@ class TaskDetailsViewModel(
     fun finishTask(): GmsTask<Void> {
         val task = _uiState.value.task
         return FirebaseManager.updateTask(
-            userId,
             taskId,
             task.copy(taskComplete = !task.taskComplete)
         )

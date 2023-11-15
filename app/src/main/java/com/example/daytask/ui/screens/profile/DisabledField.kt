@@ -23,7 +23,7 @@ import com.example.daytask.util.TextFieldManager.clearFocusOnKeyboardDismiss
 @Composable
 fun DisabledField(
     modifier: Modifier = Modifier,
-    value: String,
+    value: String?,
     placeholderText: String = "",
     @DrawableRes leadingIconRes: Int,
     @DrawableRes trailingIconRes: Int = R.drawable.ic_edit_profile,
@@ -47,7 +47,7 @@ fun DisabledField(
     }
 
     OutlinedTextField(
-        value = value,
+        value = value ?: "",
         onValueChange = { /* ignore */ },
         textStyle = InputText.copy(White),
         colors = TextFieldManager.colors(),

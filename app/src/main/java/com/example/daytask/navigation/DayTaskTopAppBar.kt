@@ -35,7 +35,8 @@ import com.example.daytask.ui.theme.NavText
 import com.example.daytask.ui.theme.UserNameText
 import com.example.daytask.ui.theme.WelcomeText
 import com.example.daytask.ui.theme.White
-import com.example.daytask.util.FirebaseManager
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,8 +50,8 @@ fun DayTaskTopAppBar(
         HomeDestination.route -> {
             HomeTopBar(
                 navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                userName = FirebaseManager.userName,
-                userPhoto = FirebaseManager.userPhoto,
+                userName = Firebase.auth.currentUser!!.displayName,
+                userPhoto = Firebase.auth.currentUser!!.photoUrl.toString(),
                 modifier = modifier.padding(dimensionResource(R.dimen.big))
             )
         }

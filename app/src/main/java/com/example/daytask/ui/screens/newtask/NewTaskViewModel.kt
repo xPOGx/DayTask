@@ -10,8 +10,6 @@ import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
 import com.example.daytask.util.Status
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -53,7 +51,7 @@ class NewTaskViewModel : ViewModel() {
             subTasksList = listOf(),
             taskComplete = false
         )
-        FirebaseManager.uploadTask(Firebase.auth.currentUser!!.uid, newTask)
+        FirebaseManager.uploadTask(newTask)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     updateUiState(_uiState.value.copy(
