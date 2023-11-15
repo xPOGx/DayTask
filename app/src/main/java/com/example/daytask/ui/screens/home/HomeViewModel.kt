@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.example.daytask.util.DataSnapshotManager.toTaskList
+import com.example.daytask.util.DataSnapshotManager.toUser
 import com.example.daytask.util.Status
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -59,25 +60,18 @@ class HomeViewModel : ViewModel() {
     }
 
     private suspend fun fetchMembersInfo(tasksList: List<Task>) {
+        if (tasksList.isEmpty()) return
         val cache = mutableListOf<User>()
         val list = tasksList.map { task ->
             task.copy(
                 memberList = task.memberList.map { user ->
-                    val temp = cache.filter {
-                        it.userId == user.userId
-                    }
+                    val temp = cache.filter { it.userId == user.userId }
                     if (temp.isEmpty()) {
-                        val ref = database.child("users/${user.userId}")
-                        val task1 = ref.child("displayName").get()
-                        val task2 = ref.child("photoUrl").get()
-                        task1.await()
-                        task2.await()
-                        val name = task1.result.getValue(String::class.java)
-                        val photoUrl = task2.result.getValue(String::class.java)
-                        user.copy(
-                            displayName = name,
-                            photoUrl = photoUrl
-                        ).also { cache.add(it) }
+                        val job = database.child("users/${user.userId}").get()
+                        job.await()
+                        job.result
+                            .toUser()
+                            .also { cache.add(it) }
                     } else temp.first()
                 }
             )
