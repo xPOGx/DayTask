@@ -1,6 +1,7 @@
 package com.example.daytask.ui.screens.tools
 
 import androidx.annotation.DimenRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
@@ -14,6 +15,7 @@ import androidx.compose.ui.res.dimensionResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.daytask.R
+import com.example.daytask.ui.theme.Secondary
 import com.example.daytask.util.ImageLoaderManager.getImageLoader
 
 @Composable
@@ -41,6 +43,7 @@ fun AvatarImage(
         modifier = modifier
             .size(dimensionResource(avatarSizeRes))
             .clip(CircleShape)
+            .background(Secondary)
             .clickable(
                 onClick = onImageClick,
                 interactionSource = MutableInteractionSource(),
