@@ -97,7 +97,7 @@ class EditTaskViewModel(
             )
         }
 
-        return FirebaseManager.updateTask(userId, taskId, newTask)
+        return FirebaseManager.updateTask(taskId, newTask)
     }
 }
 

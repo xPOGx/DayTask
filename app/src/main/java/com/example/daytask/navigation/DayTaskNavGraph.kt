@@ -98,7 +98,8 @@ fun DayTaskNavHost(
                         Firebase.auth.signOut()
                         navigateToAuth()
                     },
-                    navigateUp = { navController.navigateUp() }
+                    navigateUp = { navController.navigateUp() },
+                    navigateToNewTask = { navController.navigate(NewTaskDestination.route) }
                 )
             }
             composable(route = MessageDestination.route) {

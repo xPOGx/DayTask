@@ -2,42 +2,45 @@ package com.example.daytask.util
 
 import com.example.daytask.data.SubTask
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.example.daytask.data.Task as newTask
 
 object FirebaseManager {
     val database = Firebase.database.reference
+    private val userId = Firebase.auth.currentUser!!.uid
+    private val userRef = database.child("users/$userId")
 
-    fun updateUserName(uid: String, name: String?) {
-        database.child("users/$uid/displayName")
+    fun updateUserName(name: String?): Task<Void> {
+        return userRef.child("displayName")
             .setValue(name)
     }
 
-    fun updateUserPhoto(uid: String, photoUrl: String) {
-        database.child("users/$uid/photoUrl")
+    fun updateUserPhoto(photoUrl: String): Task<Void> {
+        return userRef.child("photoUrl")
             .setValue(photoUrl)
     }
 
-    fun uploadTask(uid: String, task: newTask): Task<Void> {
-        return database.child("users/$uid/tasks").push()
+    fun uploadTask(task: newTask): Task<Void> {
+        return userRef.child("tasks").push()
             .setValue(task)
     }
 
-    fun uploadSubTask(uid: String, taskId: String, subTask: SubTask): Task<Void> {
-        return database.child("users/$uid/tasks/$taskId/subTasksList").push()
+    fun uploadSubTask(taskId: String, subTask: SubTask): Task<Void> {
+        return userRef.child("tasks/$taskId/subTasksList").push()
             .setValue(subTask)
     }
 
-    fun updateSubTask(uid: String, taskId: String, subTaskId: String, completed: Boolean): Task<Void> {
-        return database.child("users/$uid/tasks/$taskId/subTasksList/$subTaskId")
+    fun updateSubTask(taskId: String, subTaskId: String, completed: Boolean): Task<Void> {
+        return userRef.child("tasks/$taskId/subTasksList/$subTaskId")
             .updateChildren(
                 mapOf<String, Any>("completed" to completed)
             )
     }
 
-    fun updateTask(uid: String, taskId: String, task: newTask): Task<Void> {
-        return database.child("users/$uid/tasks/$taskId")
+    fun updateTask(taskId: String, task: newTask): Task<Void> {
+        return userRef.child("tasks/$taskId")
             .updateChildren(
                 mapOf<String, Any>(
                     "title" to task.title,
@@ -48,6 +51,11 @@ object FirebaseManager {
                     "taskComplete" to task.taskComplete
                 )
             )
+    }
+
+    fun deleteTask(taskId: String): Task<Void> {
+        return userRef.child("tasks")
+            .updateChildren(mapOf(taskId to null))
     }
 }
 
