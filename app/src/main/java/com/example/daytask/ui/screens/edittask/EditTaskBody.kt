@@ -2,6 +2,7 @@ package com.example.daytask.ui.screens.edittask
 
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,8 +12,9 @@ import androidx.compose.ui.res.stringResource
 import com.example.daytask.R
 import com.example.daytask.data.SubTask
 import com.example.daytask.ui.screens.details.DetailDialog
+import com.example.daytask.ui.screens.newtask.UsersDialog
 import com.example.daytask.ui.screens.tools.TaskGrid
-import com.example.daytask.util.FakeManager
+import com.example.daytask.util.UsersManager
 
 @Composable
 fun EditTaskBody(
@@ -25,6 +27,8 @@ fun EditTaskBody(
     val state = rememberLazyGridState()
     val spanCount = 7
     var showDialog by remember { mutableStateOf(false) }
+    var showUsers by remember { mutableStateOf(false) }
+    val users by UsersManager.users.collectAsState()
     var lastSubTask by remember { mutableStateOf(SubTask()) }
 
     if (showDialog) {
@@ -55,15 +59,7 @@ fun EditTaskBody(
         secondOnChange = { updateUiState(uiState.copy(newDetail = it)) },
         teamHeadline = stringResource(R.string.team_members),
         membersList = uiState.newMembersList,
-        addMember = {
-            updateUiState(
-                uiState.copy(
-                    newMembersList = uiState.newMembersList.plus(
-                        FakeManager.fakeUser
-                    )
-                )
-            )
-        },
+        addMember = { showUsers = true },
         removeMember = {
             updateUiState(
                 uiState.copy(
@@ -92,4 +88,13 @@ fun EditTaskBody(
         buttonEnable = validSave,
         modifier = modifier
     )
+
+    if (showUsers) {
+        UsersDialog(
+            onDismissRequest = { showUsers = false },
+            memberList = uiState.newMembersList,
+            userList = users,
+            updateMemberList = { updateUiState(uiState.copy(newMembersList = it)) }
+        )
+    }
 }
