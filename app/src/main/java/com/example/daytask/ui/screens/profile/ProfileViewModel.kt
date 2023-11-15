@@ -114,10 +114,9 @@ class ProfileViewModel : ViewModel() {
                                         .build()
                                 )
                                     .addOnCompleteListener { task3 ->
-                                        if (task.isSuccessful) {
-                                            FirebaseManager.updateUserPhoto(
-                                                Firebase.auth.currentUser!!.photoUrl.toString()
-                                            )
+                                        if (task3.isSuccessful) {
+                                            val url = Firebase.auth.currentUser!!.photoUrl.toString()
+                                            FirebaseManager.updateUserPhoto(url)
                                             updateUiState(_uiState.value.copy(updateResult = true))
                                         } else updateStatus(Status.Done)
                                         notifyUser(task3, context)
