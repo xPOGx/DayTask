@@ -97,4 +97,9 @@
     <string name="uncompleted_subtasks">You have uncompleted subtasks.</string>
     <string name="complete_task">Are you sure, you want to %1$s task? %2$s</string>
     <string name="today_task">Today’s Tasks</string>
+    <string name="oh_god_no_tasks">OH GOD NO TASKS</string>
+    <string name="fix_error">Wow, how is that possible! We need to fix such an error, what should we do?!</string>
+    <string name="nah_nothing">Nah, nothing… 😔</string>
+    <string name="god_create">Be a GOD, Create! 🤩</string>
+    <string name="be_careful_task_removal">Be careful! Task removal</string>
 </resources>
