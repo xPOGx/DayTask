@@ -2,6 +2,7 @@ package com.example.daytask.ui.screens.details
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,8 +66,11 @@ fun TaskDetailsScreen(
     when (uiState.status) {
         Status.Loading -> LoadingDialog()
         Status.Error -> {
-            Toast.makeText(LocalContext.current, uiState.status.message, Toast.LENGTH_SHORT).show()
-            navigateUp()
+            val context = LocalContext.current
+            LaunchedEffect(key1 = "error") {
+                Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
+                navigateUp()
+            }
         }
 
         Status.Done -> {

@@ -3,6 +3,7 @@ package com.example.daytask.ui.screens.edittask
 import android.widget.Toast
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,8 +34,10 @@ fun EditTaskScreen(
     when (uiState.status) {
         Status.Loading -> LoadingDialog()
         Status.Error -> {
-            Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
-            navigateUp()
+            LaunchedEffect(key1 = "error") {
+                Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
+                navigateUp()
+            }
         }
 
         Status.Done -> {
