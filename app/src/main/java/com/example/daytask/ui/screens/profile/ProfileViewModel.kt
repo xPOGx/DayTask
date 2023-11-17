@@ -35,8 +35,7 @@ import java.util.UUID
 class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
-    val disabled = Firebase.auth.currentUser!!.providerData
-        .asSequence().map { it.providerId }.contains("google.com")
+    val disabled = FirebaseManager.isUserGoogleAuth()
 
     private val database = Firebase.database.reference
     private val userId = Firebase.auth.currentUser!!.uid

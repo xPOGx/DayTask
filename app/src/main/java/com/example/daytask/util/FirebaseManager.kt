@@ -8,7 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.example.daytask.data.Task as newTask
 
 object FirebaseManager {
-    val database = Firebase.database.reference
+    private val database = Firebase.database.reference
     private val userId = Firebase.auth.currentUser!!.uid
     private val userRef = database.child("users/$userId")
 
@@ -57,5 +57,8 @@ object FirebaseManager {
         return userRef.child("tasks")
             .updateChildren(mapOf(taskId to null))
     }
+
+    fun isUserGoogleAuth(): Boolean =
+        Firebase.auth.currentUser!!.providerData.map { it.providerId }.contains("google.com")
 }
 
