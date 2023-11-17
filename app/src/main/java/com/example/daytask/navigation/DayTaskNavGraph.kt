@@ -5,6 +5,10 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -38,6 +42,7 @@ import com.example.daytask.ui.screens.profile.ProfileScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DayTaskNavHost(
     modifier: Modifier = Modifier,
@@ -77,12 +82,15 @@ fun DayTaskNavHost(
                 )
             }
         },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier = modifier
     ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = HomeDestination.route,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
         ) {
             composable(route = HomeDestination.route) {
                 HomeScreen(
@@ -123,7 +131,8 @@ fun DayTaskNavHost(
             }
             composable(route = NewTaskDestination.route) {
                 NewTaskScreen(
-                    navigateUp = { navController.navigateUp() }
+                    navigateUp = { navController.navigateUp() },
+                    modifier = Modifier.imePadding()
                 )
             }
             composable(
@@ -140,7 +149,10 @@ fun DayTaskNavHost(
                     type = NavType.StringType
                 })
             ) {
-                EditTaskScreen(navigateUp = { navController.navigateUp() })
+                EditTaskScreen(
+                    navigateUp = { navController.navigateUp() },
+                    modifier = Modifier.imePadding()
+                )
             }
         }
     }

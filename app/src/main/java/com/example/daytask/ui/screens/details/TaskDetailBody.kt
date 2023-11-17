@@ -52,7 +52,8 @@ fun TaskDetailBody(
     FinishBox(
         changedSize = { paddingBottom = it },
         titleRes = if (uiState.task.taskComplete) R.string.make_active else R.string.finish_task,
-        onClick = finishTask
+        onClick = finishTask,
+        modifier = modifier
     )
 
     Column(

@@ -1,6 +1,5 @@
 package com.example.daytask.ui.screens.newtask
 
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,6 +37,6 @@ fun NewTaskScreen(
         validCreate = viewModel.validNewTask(),
         updateUiState = viewModel::updateUiState,
         saveTask = { viewModel.uploadNewTask(context) },
-        modifier = modifier.imePadding()
+        modifier = modifier
     )
 }
