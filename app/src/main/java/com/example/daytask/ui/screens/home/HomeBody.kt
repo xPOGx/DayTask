@@ -31,9 +31,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import com.example.daytask.R
 import com.example.daytask.data.Task
+import com.example.daytask.ui.screens.tools.EmptyText
 import com.example.daytask.ui.screens.tools.LoadingScreen
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
@@ -246,18 +246,6 @@ fun SearchedTasksListColumn(
             }
         }
     }
-}
-
-@Composable
-fun EmptyText(
-    modifier: Modifier = Modifier
-) {
-    /*TODO Nice empty Box*/
-    Text(
-        text = stringResource(R.string.empty),
-        textAlign = TextAlign.Center,
-        modifier = modifier.fillMaxWidth()
-    )
 }
 
 @Composable

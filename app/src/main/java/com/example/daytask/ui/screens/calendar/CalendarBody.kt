@@ -36,6 +36,7 @@ import com.example.daytask.R
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.example.daytask.ui.screens.newtask.NewTaskHeadline
+import com.example.daytask.ui.screens.tools.EmptyText
 import com.example.daytask.ui.screens.tools.ErrorScreen
 import com.example.daytask.ui.screens.tools.LoadingScreen
 import com.example.daytask.ui.screens.tools.SmallAvatarsRow
@@ -94,19 +95,22 @@ fun CalendarContent(
     tasksList: List<Task>,
     navigateToTaskDetail: (String) -> Unit
 ) {
-    LazyColumn(modifier) {
-        items(
-            items = tasksList,
-            key = { it.id }
-        ) { task ->
-            CalendarTaskCard(
-                title = task.title,
-                date = task.date,
-                memberList = task.memberList,
-                active = task == tasksList.first(),
-                onCardClick = { navigateToTaskDetail(task.id) },
-                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
-            )
+    if (tasksList.isEmpty()) EmptyText(modifier.fillMaxWidth())
+    else {
+        LazyColumn(modifier) {
+            items(
+                items = tasksList,
+                key = { it.id }
+            ) { task ->
+                CalendarTaskCard(
+                    title = task.title,
+                    date = task.date,
+                    memberList = task.memberList,
+                    active = task == tasksList.first(),
+                    onCardClick = { navigateToTaskDetail(task.id) },
+                    modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
+                )
+            }
         }
     }
 }
