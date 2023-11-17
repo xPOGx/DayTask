@@ -20,4 +20,5 @@ object Constants {
     const val timeLimit = 30L
     val timeLimitMillis = TimeUnit.MINUTES.toMillis(timeLimit)
     val backgroundRGB = Background.toArgb()
+    const val NO_TASK = "No such task"
 }

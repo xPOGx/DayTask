@@ -6,28 +6,27 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.daytask.activity.AuthActivity
 import com.example.daytask.activity.MainActivity
 import com.example.daytask.data.Task
 import com.example.daytask.util.Constants
-import com.example.daytask.util.DataSnapshotManager.toTaskList
 import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.NetworkManager.isNetworkAvailable
 import com.example.daytask.util.NotifyManager.notifyUser
 import com.example.daytask.util.Status
+import com.example.daytask.util.TasksManager
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 
@@ -37,27 +36,15 @@ class ProfileViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
     val disabled = FirebaseManager.isUserGoogleAuth()
 
-    private val database = Firebase.database.reference
-    private val userId = Firebase.auth.currentUser!!.uid
-    private val ref = database.child("users/$userId/tasks")
     private var _tasksList: MutableStateFlow<List<Task>> = MutableStateFlow(emptyList())
     val tasksList = _tasksList.asStateFlow()
 
     init {
-        initDB()
-    }
-
-    private fun initDB() {
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val tasksList = snapshot.toTaskList().sortedBy { it.date }
-                _tasksList.update { tasksList }
+        viewModelScope.launch {
+            TasksManager.data.collectLatest { data ->
+                _tasksList.update { data.taskList }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("DB Load Error", error.message)
-            }
-        })
+        }
     }
 
     fun updateUserName(context: Context) {
@@ -92,7 +79,7 @@ class ProfileViewModel : ViewModel() {
 
         val uuid = UUID.randomUUID().toString()
         val imageRef = Firebase.storage.reference
-            .child("users/${userId}/images/$uuid")
+            .child("users/${Firebase.auth.currentUser!!.uid}/images/$uuid")
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
