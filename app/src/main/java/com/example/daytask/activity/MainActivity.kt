@@ -15,7 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.daytask.ui.DayTaskApp
+import com.example.daytask.DayTaskApp
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
 import com.example.daytask.util.Constants.backgroundRGB

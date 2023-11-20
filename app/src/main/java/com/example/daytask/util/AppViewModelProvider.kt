@@ -1,4 +1,4 @@
-package com.example.daytask.ui
+package com.example.daytask.util
 
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer

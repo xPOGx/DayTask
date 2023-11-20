@@ -1,4 +1,4 @@
-package com.example.daytask.ui
+package com.example.daytask
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

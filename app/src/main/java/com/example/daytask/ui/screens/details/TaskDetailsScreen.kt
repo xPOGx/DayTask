@@ -13,8 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
-import com.example.daytask.ui.AppViewModelProvider
 import com.example.daytask.ui.screens.tools.LoadingDialog
+import com.example.daytask.util.AppViewModelProvider
 import com.example.daytask.util.MathManager
 import com.example.daytask.util.Status
 
