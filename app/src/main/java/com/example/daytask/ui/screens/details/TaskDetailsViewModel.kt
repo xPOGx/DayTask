@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.Task as GmsTask
 class TaskDetailsViewModel(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val taskId: String = checkNotNull(savedStateHandle[TaskDetailsNavigation.taskId])
+    val taskId: String = checkNotNull(savedStateHandle[TaskDetailsNavigation.taskId])
     private val _uiState = MutableStateFlow(TaskDetailsUiState())
     val uiState = _uiState.asStateFlow()
 

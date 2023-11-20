@@ -50,25 +50,41 @@ fun DayTaskNavHost(
     navigateToAuth: () -> Unit
 ) {
     var bottomBarState by remember { mutableStateOf(true) }
-    var currentItemId by remember { mutableStateOf("") }
+    var topBarState by remember { mutableStateOf(true) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: HomeDestination.route
 
-    bottomBarState = when (currentRoute) {
-        HomeDestination.route, MessageDestination.route, CalendarDestination.route,
-        NotificationDestination.route -> true
+    when (currentRoute) {
+        HomeDestination.route, CalendarDestination.route, NotificationDestination.route -> {
+            bottomBarState = true
+            topBarState = true
+        }
 
-        else -> false
+        MessageDestination.route -> {
+            bottomBarState = true
+            topBarState = false
+        }
+
+        TaskDetailsNavigation.routeWithArgs -> {
+            bottomBarState = false
+            topBarState = false
+        }
+
+        else -> {
+            bottomBarState = false
+            topBarState = true
+        }
     }
 
     Scaffold(
         topBar = {
-            DayTaskTopAppBar(
-                navController = navController,
-                currentRoute = currentRoute,
-                currentItemId = currentItemId
-            )
+            if (topBarState) {
+                DayTaskTopAppBar(
+                    navController = navController,
+                    currentRoute = currentRoute
+                )
+            }
         },
         bottomBar = {
             AnimatedVisibility(
@@ -95,7 +111,6 @@ fun DayTaskNavHost(
             composable(route = HomeDestination.route) {
                 HomeScreen(
                     navigateToDetails = { id ->
-                        currentItemId = id
                         navController.navigate("${TaskDetailsNavigation.route}/$id")
                     }
                 )
@@ -118,7 +133,6 @@ fun DayTaskNavHost(
             composable(route = CalendarDestination.route) {
                 CalendarScreen(
                     navigateToTaskDetail = { id ->
-                        currentItemId = id
                         navController.navigate("${TaskDetailsNavigation.route}/$id")
                     },
                     onBack = { navController.popBackStack(HomeDestination.route, false) }
@@ -141,7 +155,10 @@ fun DayTaskNavHost(
                     type = NavType.StringType
                 })
             ) {
-                TaskDetailsScreen(navigateUp = { navController.navigateUp() })
+                TaskDetailsScreen(
+                    navigateUp = { navController.navigateUp() },
+                    navigateToEdit = { navController.navigate("${EditTaskNavigation.route}/$it") }
+                )
             }
             composable(
                 route = EditTaskNavigation.routeWithArgs,

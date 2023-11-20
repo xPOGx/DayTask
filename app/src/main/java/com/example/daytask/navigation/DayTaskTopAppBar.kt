@@ -2,6 +2,7 @@ package com.example.daytask.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -38,12 +39,10 @@ import com.example.daytask.ui.theme.White
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DayTaskTopAppBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    currentItemId: String,
     currentRoute: String
 ) {
     when (currentRoute) {
@@ -57,78 +56,73 @@ fun DayTaskTopAppBar(
         }
 
         else -> {
-            CenterAlignedTopAppBar(
-                title = {
-                    NavTitle(currentRoute = currentRoute)
-                },
-                navigationIcon = {
-                    NavIcon(
-                        currentRoute = currentRoute,
-                        navController = navController
-                    )
-                },
+            DayTaskCenterTopAppBar(
+                currentRoute = currentRoute,
+                navigateUp = { navController.navigateUp() },
                 actions = {
-                    when (currentRoute) {
-                        TaskDetailsNavigation.routeWithArgs -> {
-                            IconButton(
-                                onClick = {
-                                    navController.navigate("${EditTaskNavigation.route}/$currentItemId")
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_edit),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified
-                                )
-                            }
-                        }
-
-                        CalendarDestination.route -> {
-                            IconButton(
-                                onClick = {
-                                    navController.navigate(NewTaskDestination.route)
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_add_square),
-                                    contentDescription = null,
-                                    tint = White
-                                )
-                            }
+                    if (currentRoute == CalendarDestination.route) {
+                        IconButton(onClick = { navController.navigate(NewTaskDestination.route) }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add_square),
+                                contentDescription = null,
+                                tint = White
+                            )
                         }
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Background
-                ),
-                modifier = modifier
+                }
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DayTaskCenterTopAppBar(
+    modifier: Modifier = Modifier,
+    currentRoute: String,
+    navigateUp: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    CenterAlignedTopAppBar(
+        title = {
+            NavTitle(currentRoute = currentRoute)
+        },
+        navigationIcon = {
+            NavIcon(
+                navigateUp = navigateUp,
+                currentRoute = currentRoute
+            )
+        },
+        actions = actions,
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = Background
+        ),
+        modifier = modifier
+    )
+}
+
 @Composable
 fun NavIcon(
     modifier: Modifier = Modifier,
-    currentRoute: String,
-    navController: NavHostController
+    navigateUp: () -> Unit,
+    currentRoute: String
 ) {
-    IconButton(
-        onClick = {
-            when (currentRoute) {
-                ProfileDestination.route, NewTaskDestination.route, TaskDetailsNavigation.routeWithArgs,
-                EditTaskNavigation.routeWithArgs -> navController.navigateUp()
+    when (currentRoute) {
+        HomeDestination.route, MessageDestination.route, CalendarDestination.route,
+        NotificationDestination.route -> {}
 
-                else -> navController.popBackStack(HomeDestination.route, false)
+        else -> {
+            IconButton(
+                onClick = navigateUp,
+                modifier = modifier
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrowleft),
+                    contentDescription = stringResource(R.string.back_button),
+                    tint = Color.Unspecified
+                )
             }
-        },
-        modifier = modifier
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_arrowleft),
-            contentDescription = stringResource(R.string.back_button),
-            tint = Color.Unspecified
-        )
+        }
     }
 }
 

@@ -1,6 +1,10 @@
 package com.example.daytask.ui.screens.details
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -9,9 +13,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
+import com.example.daytask.navigation.DayTaskCenterTopAppBar
 import com.example.daytask.navigation.NavigationDestination
 import com.example.daytask.ui.screens.tools.LoadingDialog
 import com.example.daytask.util.AppViewModelProvider
@@ -29,7 +36,8 @@ object TaskDetailsNavigation : NavigationDestination {
 fun TaskDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    navigateToEdit: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
@@ -63,24 +71,43 @@ fun TaskDetailsScreen(
         )
     }
 
-    when (uiState.status) {
-        Status.Loading -> LoadingDialog()
-        Status.Error -> {
-            val context = LocalContext.current
-            LaunchedEffect(key1 = "error") {
-                Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
-                navigateUp()
-            }
-        }
-
-        Status.Done -> {
-            TaskDetailBody(
-                uiState = uiState,
-                updateSubTask = viewModel::updateSubtask,
-                finishTask = { showAlert = true },
-                showDialog = { showDialog = true },
-                modifier = modifier
+    Scaffold(
+        topBar = {
+            DayTaskCenterTopAppBar(
+                currentRoute = TaskDetailsNavigation.routeWithArgs,
+                navigateUp = navigateUp,
+                actions = {
+                    IconButton(onClick = { navigateToEdit(viewModel.taskId) }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_edit),
+                            contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
             )
+        },
+        modifier = modifier
+    ) { paddingValues ->
+        when (uiState.status) {
+            Status.Loading -> LoadingDialog()
+            Status.Error -> {
+                val context = LocalContext.current
+                LaunchedEffect(key1 = "error") {
+                    Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
+                    navigateUp()
+                }
+            }
+
+            Status.Done -> {
+                TaskDetailBody(
+                    uiState = uiState,
+                    updateSubTask = viewModel::updateSubtask,
+                    finishTask = { showAlert = true },
+                    showDialog = { showDialog = true },
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
         }
     }
 }
