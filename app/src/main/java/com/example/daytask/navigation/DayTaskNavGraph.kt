@@ -17,12 +17,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.example.daytask.activity.MainActivity
+import com.example.daytask.activity.restartApp
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.calendar.CalendarScreen
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
@@ -46,22 +49,23 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun DayTaskNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    navigateToAuth: () -> Unit
+    navController: NavHostController
 ) {
     var bottomBarState by remember { mutableStateOf(true) }
-    var topBarState by remember { mutableStateOf(true) }
+    var topBarState by remember { mutableStateOf(false) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: HomeDestination.route
 
+    val activity = LocalContext.current as MainActivity
+
     when (currentRoute) {
-        HomeDestination.route, CalendarDestination.route, NotificationDestination.route -> {
+        CalendarDestination.route, NotificationDestination.route -> {
             bottomBarState = true
             topBarState = true
         }
 
-        MessageDestination.route -> {
+        MessageDestination.route, HomeDestination.route -> {
             bottomBarState = true
             topBarState = false
         }
@@ -110,6 +114,7 @@ fun DayTaskNavHost(
         ) {
             composable(route = HomeDestination.route) {
                 HomeScreen(
+                    navigateToProfile = { navController.navigate(ProfileDestination.route) },
                     navigateToDetails = { id ->
                         navController.navigate("${TaskDetailsNavigation.route}/$id")
                     }
@@ -119,7 +124,7 @@ fun DayTaskNavHost(
                 ProfileScreen(
                     signOut = {
                         Firebase.auth.signOut()
-                        navigateToAuth()
+                        activity.restartApp()
                     },
                     navigateUp = { navController.navigateUp() },
                     navigateToNewTask = { navController.navigate(NewTaskDestination.route) }

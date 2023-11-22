@@ -28,7 +28,7 @@ fun EditTaskBody(
     val spanCount = 7
     var showDialog by remember { mutableStateOf(false) }
     var showUsers by remember { mutableStateOf(false) }
-    val users by UsersManager.users.collectAsState()
+    val usersData by UsersManager.data.collectAsState()
     var lastSubTask by remember { mutableStateOf(SubTask()) }
 
     if (showDialog) {
@@ -93,7 +93,7 @@ fun EditTaskBody(
         UsersDialog(
             onDismissRequest = { showUsers = false },
             memberList = uiState.newMembersList,
-            userList = users,
+            userList = usersData.users,
             updateMemberList = { updateUiState(uiState.copy(newMembersList = it)) }
         )
     }

@@ -24,7 +24,7 @@ fun NewTaskBody(
     val state = rememberLazyGridState()
     val spanCount = 7
     var showUsers by remember { mutableStateOf(false) }
-    val users by UsersManager.users.collectAsState()
+    val usersData by UsersManager.data.collectAsState()
 
     TaskGrid(
         spanCount = spanCount,
@@ -55,7 +55,7 @@ fun NewTaskBody(
         UsersDialog(
             onDismissRequest = { showUsers = false },
             memberList = uiState.memberList,
-            userList = users,
+            userList = usersData.users,
             updateMemberList = { updateUiState(uiState.copy(memberList = it)) }
         )
     }

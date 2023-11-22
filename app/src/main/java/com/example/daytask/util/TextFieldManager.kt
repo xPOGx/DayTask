@@ -19,9 +19,9 @@ import com.example.daytask.ui.theme.Secondary
 
 object TextFieldManager {
     @Composable
-    fun colors() = TextFieldDefaults.colors(
-        focusedContainerColor = Secondary,
-        unfocusedContainerColor = Secondary,
+    fun colors(containerColor: Color = Secondary) = TextFieldDefaults.colors(
+        focusedContainerColor = containerColor,
+        unfocusedContainerColor = containerColor,
         focusedLeadingIconColor = Color.Unspecified,
         unfocusedLeadingIconColor = Color.Unspecified,
         focusedTrailingIconColor = Color.Unspecified,

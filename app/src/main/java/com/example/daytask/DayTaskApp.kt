@@ -9,12 +9,10 @@ import com.example.daytask.navigation.DayTaskNavHost
 @Composable
 fun DayTaskApp(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    navigateToAuth: () -> Unit
+    navController: NavHostController = rememberNavController()
 ) {
     DayTaskNavHost(
         navController = navController,
-        navigateToAuth = navigateToAuth,
         modifier = modifier
     )
 }

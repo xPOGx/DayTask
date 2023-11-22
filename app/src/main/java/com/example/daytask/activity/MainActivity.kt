@@ -20,6 +20,7 @@ import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
 import com.example.daytask.util.Constants.backgroundRGB
 
+
 class MainActivity : ComponentActivity() {
     private val timeChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -47,9 +48,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DayTaskApp(
-                        navigateToAuth = { goBackToAuth() }
-                    )
+                    DayTaskApp()
                 }
             }
         }
@@ -64,10 +63,12 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         unregisterReceiver(timeChangedReceiver)
     }
+}
 
-    private fun goBackToAuth() {
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+fun MainActivity.restartApp() {
+    val intent = Intent(this, AuthActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(intent)
+    finish()
+    Runtime.getRuntime().exit(0)
 }

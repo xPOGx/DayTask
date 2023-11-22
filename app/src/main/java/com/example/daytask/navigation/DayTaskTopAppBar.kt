@@ -1,5 +1,7 @@
 package com.example.daytask.navigation
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -11,13 +13,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.daytask.R
 import com.example.daytask.ui.screens.calendar.CalendarDestination
@@ -36,8 +41,6 @@ import com.example.daytask.ui.theme.NavText
 import com.example.daytask.ui.theme.UserNameText
 import com.example.daytask.ui.theme.WelcomeText
 import com.example.daytask.ui.theme.White
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun DayTaskTopAppBar(
@@ -45,34 +48,22 @@ fun DayTaskTopAppBar(
     navController: NavHostController,
     currentRoute: String
 ) {
-    when (currentRoute) {
-        HomeDestination.route -> {
-            HomeTopBar(
-                navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                userName = Firebase.auth.currentUser!!.displayName,
-                userPhoto = Firebase.auth.currentUser!!.photoUrl.toString(),
-                modifier = modifier.padding(dimensionResource(R.dimen.big))
-            )
-        }
-
-        else -> {
-            DayTaskCenterTopAppBar(
-                currentRoute = currentRoute,
-                navigateUp = { navController.navigateUp() },
-                actions = {
-                    if (currentRoute == CalendarDestination.route) {
-                        IconButton(onClick = { navController.navigate(NewTaskDestination.route) }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_add_square),
-                                contentDescription = null,
-                                tint = White
-                            )
-                        }
-                    }
+    DayTaskCenterTopAppBar(
+        currentRoute = currentRoute,
+        navigateUp = { navController.navigateUp() },
+        actions = {
+            if (currentRoute == CalendarDestination.route) {
+                IconButton(onClick = { navController.navigate(NewTaskDestination.route) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_add_square),
+                        contentDescription = null,
+                        tint = White
+                    )
                 }
-            )
-        }
-    }
+            }
+        },
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

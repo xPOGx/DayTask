@@ -64,7 +64,7 @@ fun UsersDialog(
                             }
                             AvatarImage(
                                 userPhoto = it.photoUrl,
-                                avatarSizeRes = R.dimen.extra_big
+                                avatarSizeRes = R.dimen.image_small
                             )
                             Text(
                                 text = it.displayName.toString(),
