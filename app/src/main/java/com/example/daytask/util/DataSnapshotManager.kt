@@ -1,12 +1,14 @@
 package com.example.daytask.util
 
+import com.example.daytask.data.Chat
+import com.example.daytask.data.Message
 import com.example.daytask.data.SubTask
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.google.firebase.database.DataSnapshot
 
 object DataSnapshotManager {
-    fun DataSnapshot.toTask(): Task {
+    private fun DataSnapshot.toTask(): Task {
         val id = this.key!!
         val date = this.child("date").getValue(Long::class.java)!!
         val detail = this.child("detail").getValue(String::class.java)!!
@@ -27,13 +29,7 @@ object DataSnapshotManager {
 
     private fun DataSnapshot.toMember(): User {
         val userId = this.child("userId").getValue(String::class.java)!!
-        val displayName = this.child("displayName").getValue(String::class.java)
-        val photoUrl = this.child("photoUrl").getValue(String::class.java)
-        return User(
-            userId,
-            displayName,
-            photoUrl
-        )
+        return makeUser(userId, this)
     }
 
     private fun DataSnapshot.toMemberList(): List<User> = this.children.map { it.toMember() }
@@ -52,16 +48,48 @@ object DataSnapshotManager {
     fun DataSnapshot.toTaskList(): List<Task> = this.children.map { it.toTask() }.toList()
     private fun DataSnapshot.toSubTaskList(): List<SubTask> = this.children.map { it.toSubTask() }
 
-    fun DataSnapshot.toUser(): User {
+    private fun DataSnapshot.toUser(): User {
         val userId = this.key!!
-        val displayName = this.child("displayName").getValue(String::class.java)
-        val photoUrl = this.child("photoUrl").getValue(String::class.java)
-        return User(
-            userId,
-            displayName,
-            photoUrl
-        )
+        return makeUser(userId, this)
     }
 
     fun DataSnapshot.toUserList(): List<User> = this.children.map { it.toUser() }
+
+    private fun DataSnapshot.toMessage(): Message {
+        val senderId = this.child("senderId").getValue(String::class.java)!!
+        val receiverId = this.child("receiverId").getValue(String::class.java)!!
+        val messageText = this.child("message").getValue(String::class.java)!!
+        val isRead = this.child("read").getValue(Boolean::class.java)!!
+        return Message(
+            senderId,
+            receiverId,
+            messageText,
+            isRead
+        )
+    }
+
+    fun DataSnapshot.toMessageList(): List<Message> = this.children.map { message ->
+        message.toMessage()
+    }
+
+    fun DataSnapshot.toChatList(): List<Chat> = this.children.map { chat ->
+        val userId = chat.key!!
+        val messagesList = chat.toMessageList()
+        Chat(
+            userId,
+            messagesList
+        )
+    }
+
+    private fun makeUser(userId: String, dataSnapshot: DataSnapshot): User {
+        val displayName = dataSnapshot.child("displayName").getValue(String::class.java)
+        val photoUrl = dataSnapshot.child("photoUrl").getValue(String::class.java)
+        val isOnline = dataSnapshot.child("isOnline").getValue(Boolean::class.java)
+        return User(
+            userId,
+            displayName,
+            photoUrl,
+            isOnline = isOnline ?: false
+        )
+    }
 }

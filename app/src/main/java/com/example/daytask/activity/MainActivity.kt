@@ -15,10 +15,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.daytask.ui.DayTaskApp
+import com.example.daytask.DayTaskApp
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
 import com.example.daytask.util.Constants.backgroundRGB
+import com.example.daytask.util.FirebaseManager
+
 
 class MainActivity : ComponentActivity() {
     private val timeChangedReceiver = object : BroadcastReceiver() {
@@ -47,9 +49,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DayTaskApp(
-                        navigateToAuth = { goBackToAuth() }
-                    )
+                    DayTaskApp()
                 }
             }
         }
@@ -58,16 +58,20 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         registerReceiver(timeChangedReceiver, intentFilter)
+        FirebaseManager.updateUserStatus(true)
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(timeChangedReceiver)
+        FirebaseManager.updateUserStatus(false)
     }
+}
 
-    private fun goBackToAuth() {
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+fun MainActivity.restartApp() {
+    val intent = Intent(this, AuthActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(intent)
+    finish()
+    Runtime.getRuntime().exit(0)
 }

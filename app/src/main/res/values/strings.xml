@@ -102,4 +102,11 @@
     <string name="nah_nothing">Nah, nothing… 😔</string>
     <string name="god_create">Be a GOD, Create! 🤩</string>
     <string name="be_careful_task_removal">Be careful! Task removal</string>
+    <string name="groups">Groups</string>
+    <string name="start_chat">Start chat</string>
+    <string name="new_message">New Message</string>
+    <string name="create_group">Create Group</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="type_a_message">Type a message</string>
 </resources>

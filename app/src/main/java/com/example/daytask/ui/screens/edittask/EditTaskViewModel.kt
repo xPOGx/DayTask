@@ -2,21 +2,19 @@ package com.example.daytask.ui.screens.edittask
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.daytask.data.SubTask
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
-import com.example.daytask.util.DataSnapshotManager.toTask
+import com.example.daytask.util.Constants
 import com.example.daytask.util.FirebaseManager
 import com.example.daytask.util.Status
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.daytask.util.TasksManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import com.google.android.gms.tasks.Task as GmsTask
 
@@ -27,20 +25,15 @@ class EditTaskViewModel(
     private val _uiState = MutableStateFlow(EditTaskUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val database = Firebase.database.reference
-    private val userId = Firebase.auth.currentUser!!.uid
-    private val ref = database.child("users/$userId/tasks/$taskId")
-
     init {
-        initTask()
-    }
-
-    private fun initTask() {
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val task = snapshot.toTask()
-                _uiState.update {
-                    it.copy(
+        viewModelScope.launch {
+            TasksManager.data.collectLatest { data ->
+                val task = data.taskList.find { it.id == taskId }
+                _uiState.update { state ->
+                    if (task == null) state.copy(
+                        status = Status.Error.also { it.message = Constants.NO_TASK }
+                    )
+                    else state.copy(
                         task = task,
                         newTitle = task.title,
                         newDetail = task.detail,
@@ -51,17 +44,7 @@ class EditTaskViewModel(
                     )
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                updateUiState(
-                    _uiState.value.copy(
-                        status = Status.Error.also {
-                            it.message = error.message
-                        }
-                    )
-                )
-            }
-        })
+        }
     }
 
     fun updateUiState(uiState: EditTaskUiState) = _uiState.update { uiState }

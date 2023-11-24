@@ -1,8 +1,8 @@
 package com.example.daytask.ui.screens.edittask
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
-import com.example.daytask.ui.AppViewModelProvider
+import com.example.daytask.util.AppViewModelProvider
 import com.example.daytask.ui.screens.tools.LoadingDialog
 import com.example.daytask.util.Status
 
@@ -33,8 +33,10 @@ fun EditTaskScreen(
     when (uiState.status) {
         Status.Loading -> LoadingDialog()
         Status.Error -> {
-            Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
-            navigateUp()
+            LaunchedEffect(key1 = "error") {
+                Toast.makeText(context, uiState.status.message, Toast.LENGTH_SHORT).show()
+                navigateUp()
+            }
         }
 
         Status.Done -> {
@@ -57,7 +59,7 @@ fun EditTaskScreen(
                             }
                         }
                 },
-                modifier = modifier.imePadding()
+                modifier = modifier
             )
         }
     }
