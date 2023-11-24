@@ -199,6 +199,13 @@ val PercentageText = TextStyle(
     fontWeight = FontWeight.W600
 )
 
+val MessageUserNameText = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 19.5.sp,
+    fontFamily = Inter,
+    fontWeight = FontWeight.W600
+)
+
 val DetailsDateText = TextStyle(
     fontSize = 17.sp,
     lineHeight = 21.5.sp,
