@@ -19,6 +19,7 @@ import com.example.daytask.DayTaskApp
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
 import com.example.daytask.util.Constants.backgroundRGB
+import com.example.daytask.util.FirebaseManager
 
 
 class MainActivity : ComponentActivity() {
@@ -57,11 +58,13 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         registerReceiver(timeChangedReceiver, intentFilter)
+        FirebaseManager.updateUserStatus(true)
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(timeChangedReceiver)
+        FirebaseManager.updateUserStatus(false)
     }
 }
 
