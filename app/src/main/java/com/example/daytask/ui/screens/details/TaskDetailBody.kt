@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,42 +51,38 @@ fun TaskDetailBody(
     FinishBox(
         changedSize = { paddingBottom = it },
         titleRes = if (uiState.task.taskComplete) R.string.make_active else R.string.finish_task,
-        onClick = finishTask,
-        modifier = modifier
+        onClick = finishTask
     )
 
-    Column(
-        modifier = modifier
-            .padding(horizontal = dimensionResource(R.dimen.big))
-            .padding(
-                top = dimensionResource(R.dimen.medium),
-                bottom = paddingBottom
-            )
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
+        modifier = modifier.padding(horizontal = dimensionResource(R.dimen.big))
     ) {
-        ProjectProgressRow(
-            percentage = MathManager.countCompletePercentage(task.subTasksList),
-            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.big))
-        )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
+        item {
+            ProjectProgressRow(
+                percentage = MathManager.countCompletePercentage(task.subTasksList),
+                modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
+            )
+        }
+        item {
             Text(
                 text = task.title,
                 style = TaskTitleText,
                 color = White,
                 modifier = Modifier.fillMaxWidth()
             )
-            ProjectInfoTextColumn(detail = task.detail)
+        }
+        item { ProjectInfoTextColumn(detail = task.detail) }
+        item {
             ProjectSquareInfo(
                 openCalendar = { /*TODO: Calendar open*/ },
                 openMembers = { /*TODO: Team open*/ },
                 date = task.date,
                 memberList = task.memberList
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))
-            ) {
+        }
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))) {
                 if (!task.taskComplete) {
                     MainButton(
                         onClick = showDialog,
@@ -107,7 +102,7 @@ fun TaskDetailBody(
                         }
                     )
                 }
-                Spacer(modifier = Modifier)
+                Spacer(Modifier)
             }
         }
     }
@@ -121,7 +116,7 @@ fun FinishBox(
     @StringRes titleRes: Int
 ) {
     val density = LocalDensity.current.density
-    val padding = dimensionResource(R.dimen.big)
+    val padding = dimensionResource(R.dimen.medium)
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = modifier.fillMaxHeight()

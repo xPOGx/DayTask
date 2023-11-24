@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -58,33 +57,39 @@ fun CalendarBody(
     updateDay: (Int) -> Unit,
     navigateToTaskDetail: (String) -> Unit
 ) {
-    val lazyListState = rememberLazyListState(
+    val lazyRowListState = rememberLazyListState(
         initialFirstVisibleItemIndex = with(uiState.initDay - 3) { if (this >= 0) this else 0 }
     )
 
-    Column(
+    LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
         modifier = modifier
             .padding(horizontal = dimensionResource(R.dimen.big))
             .padding(top = dimensionResource(R.dimen.medium))
     ) {
-        NewTaskHeadline(CalendarManager.currentMonthString)
-        CalendarDaysRow(
-            lazyListState = lazyListState,
-            selectedDay = uiState.initDay,
-            dayClicked = updateDay
-        )
-        NewTaskHeadline(
-            if (CalendarManager.currentDayOfMonth == uiState.initDay) stringResource(R.string.today_task)
-            else DateFormatter.formatShortDate(CalendarManager.getDayDate(uiState.initDay))
-        )
-        when (uiState.status) {
-            Status.Loading -> LoadingScreen(Modifier.fillMaxSize())
-            Status.Error -> ErrorScreen(Modifier.fillMaxSize())
-            Status.Done -> CalendarContent(
-                tasksList = uiState.tasksList,
-                navigateToTaskDetail = navigateToTaskDetail
+        item { NewTaskHeadline(CalendarManager.currentMonthString) }
+        item {
+            CalendarDaysRow(
+                lazyListState = lazyRowListState,
+                selectedDay = uiState.initDay,
+                dayClicked = updateDay
             )
+        }
+        item {
+            NewTaskHeadline(
+                if (CalendarManager.currentDayOfMonth == uiState.initDay) stringResource(R.string.today_task)
+                else DateFormatter.formatShortDate(CalendarManager.getDayDate(uiState.initDay))
+            )
+        }
+        item {
+            when (uiState.status) {
+                Status.Loading -> LoadingScreen(Modifier.fillMaxSize())
+                Status.Error -> ErrorScreen(Modifier.fillMaxSize())
+                Status.Done -> CalendarContent(
+                    tasksList = uiState.tasksList,
+                    navigateToTaskDetail = navigateToTaskDetail
+                )
+            }
         }
     }
 }
@@ -97,18 +102,17 @@ fun CalendarContent(
 ) {
     if (tasksList.isEmpty()) EmptyText(modifier.fillMaxWidth())
     else {
-        LazyColumn(modifier) {
-            items(
-                items = tasksList,
-                key = { it.id }
-            ) { task ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),
+            modifier = modifier
+        ) {
+            tasksList.forEach { task ->
                 CalendarTaskCard(
                     title = task.title,
                     date = task.date,
                     memberList = task.memberList,
                     active = task == tasksList.first(),
-                    onCardClick = { navigateToTaskDetail(task.id) },
-                    modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
+                    onCardClick = { navigateToTaskDetail(task.id) }
                 )
             }
         }
