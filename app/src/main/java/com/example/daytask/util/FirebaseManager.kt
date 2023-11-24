@@ -1,5 +1,6 @@
 package com.example.daytask.util
 
+import com.example.daytask.data.Message
 import com.example.daytask.data.SubTask
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
@@ -60,5 +61,18 @@ object FirebaseManager {
 
     fun isUserGoogleAuth(): Boolean =
         Firebase.auth.currentUser!!.providerData.map { it.providerId }.contains("google.com")
-}
 
+    fun updateUserStatus(isOnline: Boolean): Task<Void> {
+        return userRef.child("isOnline")
+            .setValue(isOnline)
+    }
+
+    fun uploadPrivateMessage(message: Message): Pair<Task<Void>, Task<Void>> {
+        val receiverId = message.receiverId
+        val task1 = database.child("users/$receiverId/message/private/$userId").push()
+            .setValue(message)
+        val task2 = userRef.child("message/private/$receiverId").push()
+            .setValue(message)
+        return Pair(task1, task2)
+    }
+}
