@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.daytask.R
 import com.example.daytask.ui.screens.calendar.CalendarDestination
+import com.example.daytask.ui.screens.chat.ChatDestination
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
 import com.example.daytask.ui.screens.edittask.EditTaskNavigation
 import com.example.daytask.ui.screens.home.HomeDestination
@@ -35,8 +36,11 @@ import com.example.daytask.ui.screens.notification.NotificationDestination
 import com.example.daytask.ui.screens.profile.ProfileDestination
 import com.example.daytask.ui.screens.tools.AvatarImage
 import com.example.daytask.ui.screens.tools.HorizontalAnimationText
+import com.example.daytask.ui.screens.users.UsersDestination
 import com.example.daytask.ui.theme.Background
 import com.example.daytask.ui.theme.MainColor
+import com.example.daytask.ui.theme.MessageColor
+import com.example.daytask.ui.theme.MessageUserNameText
 import com.example.daytask.ui.theme.NavText
 import com.example.daytask.ui.theme.UserNameText
 import com.example.daytask.ui.theme.WelcomeText
@@ -131,6 +135,8 @@ fun NavTitle(
         NewTaskDestination.route -> NewTaskDestination.titleRes
         TaskDetailsNavigation.routeWithArgs -> TaskDetailsNavigation.titleRes
         EditTaskNavigation.routeWithArgs -> EditTaskNavigation.titleRes
+        UsersDestination.route -> UsersDestination.titleRes
+        ChatDestination.routeWithArgs -> ChatDestination.titleRes
         else -> HomeDestination.titleRes
     }
 
@@ -173,4 +179,71 @@ fun HomeTopBar(
             userPhoto = userPhoto
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatTopBar(
+    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
+    photoUrl: String?,
+    displayName: String?,
+    isOnline: Boolean,
+    call: () -> Unit,
+    videoCall: () -> Unit
+) {
+    TopAppBar(
+        title = {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.small))
+            ) {
+                AvatarImage(
+                    userPhoto = photoUrl,
+                    avatarSizeRes = R.dimen.image_small
+                )
+                Column {
+                    Text(
+                        text = displayName.toString(),
+                        style = MessageUserNameText,
+                        color = White,
+                        modifier = Modifier.horizontalScroll(rememberScrollState())
+                    )
+                    Text(
+                        text = if (isOnline)
+                            stringResource(R.string.online) else stringResource(R.string.offline),
+                        style = MessageUserNameText.copy(fontWeight = FontWeight.W400),
+                        color = MessageColor
+                    )
+                }
+            }
+        },
+        navigationIcon = {
+            NavIcon(
+                navigateUp = navigateUp,
+                currentRoute = ChatDestination.routeWithArgs
+            )
+        },
+        actions = {
+            IconButton(onClick = call) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_video),
+                    contentDescription = null,
+                    tint = White
+                )
+            }
+            IconButton(onClick = videoCall) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_call),
+                    contentDescription = null,
+                    tint = White
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Background
+        ),
+        modifier = modifier
+    )
 }

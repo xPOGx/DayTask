@@ -28,6 +28,8 @@ import com.example.daytask.activity.MainActivity
 import com.example.daytask.activity.restartApp
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.calendar.CalendarScreen
+import com.example.daytask.ui.screens.chat.ChatDestination
+import com.example.daytask.ui.screens.chat.ChatScreen
 import com.example.daytask.ui.screens.details.TaskDetailsNavigation
 import com.example.daytask.ui.screens.details.TaskDetailsScreen
 import com.example.daytask.ui.screens.edittask.EditTaskNavigation
@@ -42,6 +44,8 @@ import com.example.daytask.ui.screens.notification.NotificationDestination
 import com.example.daytask.ui.screens.notification.NotificationScreen
 import com.example.daytask.ui.screens.profile.ProfileDestination
 import com.example.daytask.ui.screens.profile.ProfileScreen
+import com.example.daytask.ui.screens.users.UsersDestination
+import com.example.daytask.ui.screens.users.UsersScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -70,7 +74,7 @@ fun DayTaskNavHost(
             topBarState = false
         }
 
-        TaskDetailsNavigation.routeWithArgs -> {
+        TaskDetailsNavigation.routeWithArgs, UsersDestination.route, ChatDestination.routeWithArgs -> {
             bottomBarState = false
             topBarState = false
         }
@@ -132,7 +136,9 @@ fun DayTaskNavHost(
             }
             composable(route = MessageDestination.route) {
                 MessageScreen(
-                    onBack = { navController.popBackStack(HomeDestination.route, false) }
+                    onBack = { navController.popBackStack(HomeDestination.route, false) },
+                    navigateToUsers = { navController.navigate(UsersDestination.route) },
+                    navigateToChat = { navController.navigate("${ChatDestination.route}/$it") }
                 )
             }
             composable(route = CalendarDestination.route) {
@@ -172,6 +178,23 @@ fun DayTaskNavHost(
                 })
             ) {
                 EditTaskScreen(
+                    navigateUp = { navController.navigateUp() },
+                    modifier = Modifier.imePadding()
+                )
+            }
+            composable(route = UsersDestination.route) {
+                UsersScreen(
+                    navigateUp = { navController.navigateUp() },
+                    navigateToUserChat = { navController.navigate("${ChatDestination.route}/$it") }
+                )
+            }
+            composable(
+                route = ChatDestination.routeWithArgs,
+                arguments = listOf(navArgument(ChatDestination.userId) {
+                    type = NavType.StringType
+                })
+            ) {
+                ChatScreen(
                     navigateUp = { navController.navigateUp() },
                     modifier = Modifier.imePadding()
                 )
