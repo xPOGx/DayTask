@@ -35,7 +35,7 @@ import com.example.daytask.R
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.example.daytask.ui.screens.newtask.NewTaskHeadline
-import com.example.daytask.ui.screens.tools.EmptyText
+import com.example.daytask.ui.screens.tools.EmptyBox
 import com.example.daytask.ui.screens.tools.ErrorScreen
 import com.example.daytask.ui.screens.tools.LoadingScreen
 import com.example.daytask.ui.screens.tools.SmallAvatarsRow
@@ -100,7 +100,7 @@ fun CalendarContent(
     tasksList: List<Task>,
     navigateToTaskDetail: (String) -> Unit
 ) {
-    if (tasksList.isEmpty()) EmptyText(modifier.fillMaxWidth())
+    if (tasksList.isEmpty()) EmptyBox()
     else {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),

@@ -33,7 +33,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.daytask.R
 import com.example.daytask.data.Task
-import com.example.daytask.ui.screens.tools.EmptyText
+import com.example.daytask.ui.screens.tools.EmptyBox
 import com.example.daytask.ui.screens.tools.LoadingScreen
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
@@ -163,7 +163,7 @@ fun CompletedTasksListRow(
     tasksList: List<Task>,
     navigateToDetails: (String) -> Unit
 ) {
-    if (tasksList.isEmpty()) EmptyText()
+    if (tasksList.isEmpty()) EmptyBox()
     else {
         val screenWidth = LocalConfiguration.current.screenWidthDp
         val cardWidth = screenWidth / 2
@@ -193,7 +193,7 @@ fun ActiveTasksListColumn(
     tasksList: List<Task>,
     navigateToDetails: (String) -> Unit
 ) {
-    if (tasksList.isEmpty()) EmptyText()
+    if (tasksList.isEmpty()) EmptyBox()
     else {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small)),
@@ -226,7 +226,7 @@ fun SearchedTasksListColumn(
             modifier = Modifier.padding(bottom = dimensionResource(R.dimen.medium))
         )
         if (tasksList.isEmpty()) {
-            EmptyText()
+            EmptyBox()
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small))) {
                 tasksList.sortedBy { !it.taskComplete }

@@ -41,6 +41,7 @@ import com.example.daytask.R
 import com.example.daytask.data.Chat
 import com.example.daytask.ui.screens.tools.AvatarImage
 import com.example.daytask.ui.screens.tools.CircleCanvas
+import com.example.daytask.ui.screens.tools.EmptyBox
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.MessageColor
@@ -84,24 +85,33 @@ fun MessageBody(
                     isStartChatVisible = true
                 }
             )
-            if (isChat) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
-                    modifier = Modifier.nestedScroll(nestedScrollConnection)
-                ) {
-                    items(chatList) { chat ->
-                        val user = data.users.find { it.userId == chat.userId }!!
-                        val lastMsg = chat.messagesList.last()
-                        MessageItem(
-                            senderName = user.displayName.toString(),
-                            senderPhoto = user.photoUrl.toString(),
-                            messageText = lastMsg.message,
-                            isRead = lastMsg.isRead,
-                            action = { navigateToChat(chat.userId) }
-                        )
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.big)),
+                modifier = Modifier.nestedScroll(nestedScrollConnection)
+            ) {
+                if (isChat) {
+                    if (chatList.isEmpty()) item { EmptyBox() }
+                    else {
+                        items(chatList) { chat ->
+                            val user = data.users.find { it.userId == chat.userId }!!
+                            val lastMsg = chat.messagesList.last()
+                            MessageItem(
+                                senderName = user.displayName.toString(),
+                                senderPhoto = user.photoUrl.toString(),
+                                messageText = lastMsg.message,
+                                isRead = lastMsg.isRead,
+                                action = { navigateToChat(chat.userId) }
+                            )
+                        }
                     }
-                    item { /*bottom padding*/ }
+                } else {
+                    if (true) item { EmptyBox() }
+                    else {
+                        /*TODO: group chats*/
+                    }
                 }
+                item { /*bottom padding*/ }
             }
         }
 
