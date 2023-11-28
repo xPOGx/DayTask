@@ -2,6 +2,7 @@ package com.example.daytask.util.firebase
 
 import com.example.daytask.data.Chat
 import com.example.daytask.data.Message
+import com.example.daytask.data.Notification
 import com.example.daytask.data.SubTask
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
@@ -79,6 +80,27 @@ object DataSnapshotManager {
             userId,
             messagesList
         )
+    }
+
+    private fun DataSnapshot.toNotification(): Notification {
+        val id = this.key!!
+        val senderId = this.child("senderId").getValue(String::class.java)!!
+        val receiverId = this.child("receiverId").getValue(String::class.java)!!
+        val messageText = this.child("messageText").getValue(String::class.java)!!
+        val destinationText = this.child("destinationText").getValue(String::class.java)!!
+        val action = this.child("action").children.map { it.value as String }
+        return Notification(
+            id,
+            senderId,
+            receiverId,
+            messageText,
+            destinationText,
+            Pair(action.first(), action.last())
+        )
+    }
+
+    fun DataSnapshot.toNotificationList(): List<Notification> = this.children.map { notification ->
+        notification.toNotification()
     }
 
     private fun makeUser(userId: String, dataSnapshot: DataSnapshot): User {
