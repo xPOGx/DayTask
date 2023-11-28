@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,8 @@ import com.example.daytask.ui.screens.profile.ProfileDestination
 import com.example.daytask.ui.screens.profile.ProfileScreen
 import com.example.daytask.ui.screens.users.UsersDestination
 import com.example.daytask.ui.screens.users.UsersScreen
+import com.example.daytask.util.Status
+import com.example.daytask.util.firebase.NotificationManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -62,6 +65,8 @@ fun DayTaskNavHost(
     val currentRoute = navBackStackEntry?.destination?.route ?: HomeDestination.route
 
     val activity = LocalContext.current as MainActivity
+
+    val notifyData by NotificationManager.data.collectAsState()
 
     when (currentRoute) {
         CalendarDestination.route, NotificationDestination.route -> {
@@ -102,7 +107,8 @@ fun DayTaskNavHost(
             ) {
                 DayTaskBottomAppBar(
                     navController = navController,
-                    currentRoute = currentRoute
+                    currentRoute = currentRoute,
+                    isNotify = notifyData.status == Status.Done && notifyData.notifications.isNotEmpty()
                 )
             }
         },
@@ -151,7 +157,8 @@ fun DayTaskNavHost(
             }
             composable(route = NotificationDestination.route) {
                 NotificationScreen(
-                    onBack = { navController.popBackStack(HomeDestination.route, false) }
+                    onBack = { navController.popBackStack(HomeDestination.route, false) },
+                    navigateToChat = { navController.navigate("${ChatDestination.route}/$it") }
                 )
             }
             composable(route = NewTaskDestination.route) {

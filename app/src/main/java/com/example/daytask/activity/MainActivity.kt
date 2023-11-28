@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,10 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.daytask.DayTaskApp
+import com.example.daytask.R
 import com.example.daytask.ui.theme.DayTaskTheme
 import com.example.daytask.util.Constants.TIME_CHANGED
 import com.example.daytask.util.Constants.backgroundRGB
-import com.example.daytask.util.FirebaseManager
+import com.example.daytask.util.firebase.FirebaseManager
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +47,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = backgroundRGB
         window.navigationBarColor = backgroundRGB
+        checkNotifications()
 
         setContent {
             DayTaskTheme {
@@ -52,6 +61,21 @@ class MainActivity : ComponentActivity() {
                     DayTaskApp()
                 }
             }
+        }
+    }
+
+    private fun checkNotifications() {
+        CoroutineScope(Dispatchers.Default).launch {
+            Firebase.database.reference.child("users/${Firebase.auth.uid}/notification")
+                .get().addOnCompleteListener {
+                    if (it.isSuccessful && it.result.hasChildren()) {
+                        Toast.makeText(
+                            applicationContext,
+                            applicationContext.resources.getString(R.string.unread_msg),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 
