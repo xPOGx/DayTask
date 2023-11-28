@@ -32,7 +32,7 @@ import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.MessageUserNameText
 import com.example.daytask.ui.theme.White
 import com.example.daytask.util.Status
-import com.example.daytask.util.UsersManager
+import com.example.daytask.util.firebase.UsersManager
 
 @Composable
 fun UsersBody(

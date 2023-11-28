@@ -6,10 +6,10 @@ import com.example.daytask.R
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.example.daytask.util.Constants.timeLimitMillis
-import com.example.daytask.util.FirebaseManager
-import com.example.daytask.util.NetworkManager.isNetworkAvailable
-import com.example.daytask.util.NotifyManager.notifyUser
+import com.example.daytask.util.NetworkManager
+import com.example.daytask.util.NotifyManager
 import com.example.daytask.util.Status
+import com.example.daytask.util.firebase.FirebaseManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,12 +32,12 @@ class NewTaskViewModel : ViewModel() {
     }
 
     fun uploadNewTask(context: Context) {
-        if (!isNetworkAvailable(context)) {
-            notifyUser(context)
+        if (!NetworkManager.isNetworkAvailable(context)) {
+            NotifyManager.notifyUser(context)
             return
         }
         if (!validNewTask()) {
-            notifyUser(context, context.getString(R.string.not_valid_task))
+            NotifyManager.notifyUser(context, context.getString(R.string.not_valid_task))
             return
         }
         updateStatus(Status.Loading)
@@ -61,7 +61,7 @@ class NewTaskViewModel : ViewModel() {
                         )
                     }
                 } else updateStatus(Status.Done)
-                notifyUser(task, context)
+                NotifyManager.notifyUser(task, context)
             }
     }
 }

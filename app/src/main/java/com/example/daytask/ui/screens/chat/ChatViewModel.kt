@@ -5,9 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.daytask.data.Message
-import com.example.daytask.util.DataSnapshotManager.toMessageList
-import com.example.daytask.util.FirebaseManager
-import com.example.daytask.util.UsersManager
+import com.example.daytask.util.firebase.DataSnapshotManager.toMessageList
+import com.example.daytask.util.firebase.FirebaseManager
+import com.example.daytask.util.firebase.UsersManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

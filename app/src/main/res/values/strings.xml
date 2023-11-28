@@ -109,4 +109,6 @@
     <string name="online">Online</string>
     <string name="offline">Offline</string>
     <string name="type_a_message">Type a message</string>
+    <string name="new_word">New</string>
+    <string name="unread_msg">You have unread messages</string>
 </resources>

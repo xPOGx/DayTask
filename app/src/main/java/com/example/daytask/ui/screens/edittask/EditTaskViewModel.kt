@@ -7,9 +7,9 @@ import com.example.daytask.data.SubTask
 import com.example.daytask.data.Task
 import com.example.daytask.data.User
 import com.example.daytask.util.Constants
-import com.example.daytask.util.FirebaseManager
+import com.example.daytask.util.firebase.FirebaseManager
 import com.example.daytask.util.Status
-import com.example.daytask.util.TasksManager
+import com.example.daytask.util.firebase.TasksManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

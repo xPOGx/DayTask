@@ -40,6 +40,7 @@ import com.example.daytask.ui.screens.home.HomeDestination
 import com.example.daytask.ui.screens.messages.MessageDestination
 import com.example.daytask.ui.screens.newtask.NewTaskDestination
 import com.example.daytask.ui.screens.notification.NotificationDestination
+import com.example.daytask.ui.screens.tools.CircleCanvas
 import com.example.daytask.ui.screens.tools.SquareButton
 import com.example.daytask.ui.theme.Background
 import com.example.daytask.ui.theme.BottomBarColor
@@ -54,7 +55,8 @@ import com.example.daytask.util.TextFieldManager.clearFocusOnKeyboardDismiss
 fun DayTaskBottomAppBar(
     modifier: Modifier = Modifier,
     navController: NavController,
-    currentRoute: String
+    currentRoute: String,
+    isNotify: Boolean
 ) {
     BottomAppBar(
         containerColor = Tertiary,
@@ -96,6 +98,7 @@ fun DayTaskBottomAppBar(
                 iconRes = R.drawable.ic_notification_1,
                 textRes = R.string.notification,
                 active = currentRoute == NotificationDestination.route,
+                redDot = isNotify,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -108,7 +111,8 @@ fun BottomBarIcon(
     onClick: () -> Unit,
     @DrawableRes iconRes: Int,
     @StringRes textRes: Int,
-    active: Boolean
+    active: Boolean,
+    redDot: Boolean = false
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -119,11 +123,23 @@ fun BottomBarIcon(
                 interactionSource = MutableInteractionSource()
             )
     ) {
-        Icon(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            tint = if (active) MainColor else Color.Unspecified
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+        ) {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                tint = if (active) MainColor else Color.Unspecified
+            )
+            if (redDot) {
+                CircleCanvas(
+                    radius = 10f,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
+        }
         Text(
             text = stringResource(textRes),
             style = BottomBarText,

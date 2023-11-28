@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.daytask.R
 import com.example.daytask.ui.screens.tools.TaskGrid
-import com.example.daytask.util.UsersManager
+import com.example.daytask.util.firebase.UsersManager
 
 @Composable
 fun NewTaskBody(

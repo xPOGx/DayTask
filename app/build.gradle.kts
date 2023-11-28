@@ -58,7 +58,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(platform("androidx.compose:compose-bom:${rootProject.extra["compose_bom_version"]}"))
     implementation("androidx.compose.ui:ui")
@@ -70,7 +70,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${rootProject.extra["lifecycle_version"]}")
     // Navigation
-    //noinspection GradleDependency
     implementation("androidx.navigation:navigation-compose:${rootProject.extra["nav_version"]}")
 
     // NETWORK
@@ -85,10 +84,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // DATABASE
-    // Room
-//    implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-//    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
-//    implementation("androidx.room:room-ktx:")
     // Datastore preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 

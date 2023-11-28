@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.daytask.R
 import com.example.daytask.data.Chat
 import com.example.daytask.ui.screens.tools.AvatarImage
+import com.example.daytask.ui.screens.tools.CircleCanvas
 import com.example.daytask.ui.theme.Black
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.MessageColor
@@ -48,7 +48,7 @@ import com.example.daytask.ui.theme.MessageUserNameText
 import com.example.daytask.ui.theme.TeamCardText
 import com.example.daytask.ui.theme.Tertiary
 import com.example.daytask.ui.theme.White
-import com.example.daytask.util.UsersManager
+import com.example.daytask.util.firebase.UsersManager
 
 @Composable
 fun MessageBody(
@@ -163,12 +163,11 @@ fun MessageItem(
                 color = White
             )
             if (!isRead) {
-                Canvas(modifier = Modifier.padding(top = dimensionResource(R.dimen.extra_small))) {
-                    drawCircle(
-                        color = MainColor,
-                        radius = 6f
-                    )
-                }
+                CircleCanvas(
+                    radius = 6f,
+                    color = MainColor,
+                    modifier = Modifier.padding(top = dimensionResource(R.dimen.extra_small))
+                )
             }
         }
     }

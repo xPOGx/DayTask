@@ -1,6 +1,8 @@
-package com.example.daytask.util
+package com.example.daytask.util.firebase
 
 import com.example.daytask.data.Message
+import com.example.daytask.data.Notification
+import com.example.daytask.data.NotificationKey
 import com.example.daytask.data.SubTask
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
@@ -10,7 +12,7 @@ import com.example.daytask.data.Task as newTask
 
 object FirebaseManager {
     private val database = Firebase.database.reference
-    private val userId = Firebase.auth.currentUser!!.uid
+    private val userId = Firebase.auth.uid!!
     private val userRef = database.child("users/$userId")
 
     fun updateUserName(name: String?): Task<Void> {
@@ -24,6 +26,9 @@ object FirebaseManager {
     }
 
     fun uploadTask(task: newTask): Task<Void> {
+        task.memberList.forEach {
+            createNotification(it.userId, NotificationKey.Task, task.title)
+        }
         return userRef.child("tasks").push()
             .setValue(task)
     }
@@ -73,6 +78,43 @@ object FirebaseManager {
             .setValue(message)
         val task2 = userRef.child("message/private/$receiverId").push()
             .setValue(message)
+        createNotification(receiverId, NotificationKey.Message)
         return Pair(task1, task2)
+    }
+
+    private fun createNotification(
+        receiverId: String,
+        actionKey: NotificationKey,
+        destinationText: String = ""
+    ) {
+        val messageText: String
+        val action: Pair<String, String>
+        when (actionKey) {
+            NotificationKey.Message -> {
+                messageText = "sent you a new message"
+                action = Pair("message", userId)
+            }
+
+            NotificationKey.Task -> {
+                messageText = "added you to project"
+                action = Pair("task", "taskId")
+            }
+        }
+
+        val notification = Notification(
+            senderId = userId,
+            receiverId = receiverId,
+            messageText = messageText,
+            destinationText = destinationText,
+            action = action
+        )
+
+        database.child("users/$receiverId/notification").push()
+            .setValue(notification)
+    }
+
+    fun deleteNotification(id: String): Task<Void> {
+        return userRef.child("notification")
+            .updateChildren(mapOf(id to null))
     }
 }

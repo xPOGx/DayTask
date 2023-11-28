@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.daytask.data.Task
 import com.example.daytask.util.Status
-import com.example.daytask.util.TasksManager
+import com.example.daytask.util.firebase.TasksManager
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

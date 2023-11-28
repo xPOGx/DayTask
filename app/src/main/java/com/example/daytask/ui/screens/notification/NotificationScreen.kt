@@ -1,12 +1,11 @@
 package com.example.daytask.ui.screens.notification
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
 import com.example.daytask.navigation.NavigationDestination
 
@@ -18,17 +17,40 @@ object NotificationDestination : NavigationDestination {
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    viewModel: NotificationViewModel = viewModel(),
+    onBack: () -> Unit,
+    navigateToChat: (String) -> Unit
 ) {
     BackHandler(
         onBack = onBack,
         enabled = true
     )
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxSize()
-    ) {
-        Text(text = "NotificationScreen")
-    }
+    val uiState by viewModel.uiState.collectAsState()
+
+    NotificationBody(
+        notificationsList = uiState.notificationList,
+        action = { notification ->
+            val key = notification.action.first
+            val id = notification.action.second
+
+            when (key) {
+                "message" -> {
+                    navigateToChat(id)
+                    val tempDelete = uiState.notificationList.filter {
+                        it.action.first == key && it.action.second == id
+                    }
+                    tempDelete.forEach { viewModel.removeNotification(it.id) }
+                }
+
+                "task" -> {
+                    viewModel.removeNotification(id)
+                }
+
+                else -> { viewModel.removeNotification(id) }
+            }
+
+        },
+        modifier = modifier
+    )
 }
