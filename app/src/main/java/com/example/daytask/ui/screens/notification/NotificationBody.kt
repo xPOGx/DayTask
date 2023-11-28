@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.daytask.R
 import com.example.daytask.data.Notification
 import com.example.daytask.ui.screens.tools.AvatarImage
-import com.example.daytask.ui.screens.tools.EmptyText
+import com.example.daytask.ui.screens.tools.EmptyBox
 import com.example.daytask.ui.theme.HelpColor
 import com.example.daytask.ui.theme.MainColor
 import com.example.daytask.ui.theme.MessageUserNameText
@@ -54,9 +53,7 @@ fun NotificationBody(
                     color = White,
                     modifier = Modifier.padding(top = dimensionResource(R.dimen.small))
                 )
-            } else {
-                EmptyText(Modifier.fillMaxWidth())
-            }
+            } else EmptyBox()
         }
         items(notificationsList) { notification ->
             usersData.users.find { it.userId == notification.senderId }?.let { user ->
