@@ -14,7 +14,7 @@ import com.example.daytask.data.SubTask
 import com.example.daytask.ui.screens.details.DetailDialog
 import com.example.daytask.ui.screens.newtask.UsersDialog
 import com.example.daytask.ui.screens.tools.TaskGrid
-import com.example.daytask.util.UsersManager
+import com.example.daytask.util.firebase.UsersManager
 
 @Composable
 fun EditTaskBody(

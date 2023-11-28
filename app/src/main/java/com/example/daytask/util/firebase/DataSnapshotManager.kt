@@ -1,4 +1,4 @@
-package com.example.daytask.util
+package com.example.daytask.util.firebase
 
 import com.example.daytask.data.Chat
 import com.example.daytask.data.Message

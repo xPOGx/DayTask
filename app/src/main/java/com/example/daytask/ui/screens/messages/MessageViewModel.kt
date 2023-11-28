@@ -3,7 +3,7 @@ package com.example.daytask.ui.screens.messages
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.daytask.data.Chat
-import com.example.daytask.util.DataSnapshotManager.toChatList
+import com.example.daytask.util.firebase.DataSnapshotManager.toChatList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

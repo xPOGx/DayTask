@@ -1,4 +1,4 @@
-package com.example.daytask.util
+package com.example.daytask.util.firebase
 
 import com.example.daytask.data.Message
 import com.example.daytask.data.SubTask
@@ -10,7 +10,7 @@ import com.example.daytask.data.Task as newTask
 
 object FirebaseManager {
     private val database = Firebase.database.reference
-    private val userId = Firebase.auth.currentUser!!.uid
+    private val userId = Firebase.auth.uid!!
     private val userRef = database.child("users/$userId")
 
     fun updateUserName(name: String?): Task<Void> {

@@ -11,11 +11,11 @@ import com.example.daytask.activity.AuthActivity
 import com.example.daytask.activity.MainActivity
 import com.example.daytask.data.Task
 import com.example.daytask.util.Constants
-import com.example.daytask.util.FirebaseManager
-import com.example.daytask.util.NetworkManager.isNetworkAvailable
-import com.example.daytask.util.NotifyManager.notifyUser
+import com.example.daytask.util.NetworkManager
+import com.example.daytask.util.NotifyManager
 import com.example.daytask.util.Status
-import com.example.daytask.util.TasksManager
+import com.example.daytask.util.firebase.FirebaseManager
+import com.example.daytask.util.firebase.TasksManager
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -48,8 +48,8 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun updateUserName(context: Context) {
-        if (!isNetworkAvailable(context)) {
-            notifyUser(context)
+        if (!NetworkManager.isNetworkAvailable(context)) {
+            NotifyManager.notifyUser(context)
             return
         }
         updateStatus(Status.Loading)
@@ -66,13 +66,13 @@ class ProfileViewModel : ViewModel() {
                     )
                     updateUiState(_uiState.value.copy(updateResult = true))
                 } else updateStatus(Status.Done)
-                notifyUser(task, context)
+                NotifyManager.notifyUser(task, context)
             }
     }
 
     fun updateUserAvatar(context: Context, bitmap: Bitmap) {
-        if (!isNetworkAvailable(context)) {
-            notifyUser(context)
+        if (!NetworkManager.isNetworkAvailable(context)) {
+            NotifyManager.notifyUser(context)
             return
         }
         updateStatus(Status.Loading)
@@ -101,19 +101,20 @@ class ProfileViewModel : ViewModel() {
                                 )
                                     .addOnCompleteListener { task3 ->
                                         if (task3.isSuccessful) {
-                                            val url = Firebase.auth.currentUser!!.photoUrl.toString()
+                                            val url =
+                                                Firebase.auth.currentUser!!.photoUrl.toString()
                                             FirebaseManager.updateUserPhoto(url)
                                             updateUiState(_uiState.value.copy(updateResult = true))
                                         } else updateStatus(Status.Done)
-                                        notifyUser(task3, context)
+                                        NotifyManager.notifyUser(task3, context)
                                     }
                             } else {
-                                notifyUser(task2, context)
+                                NotifyManager.notifyUser(task2, context)
                                 updateStatus(Status.Done)
                             }
                         }
                 } else {
-                    notifyUser(task, context)
+                    NotifyManager.notifyUser(task, context)
                     updateStatus(Status.Done)
                 }
             }
@@ -121,8 +122,8 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun updateUserEmail(context: Context) {
-        if (!isNetworkAvailable(context)) {
-            notifyUser(context)
+        if (!NetworkManager.isNetworkAvailable(context)) {
+            NotifyManager.notifyUser(context)
             return
         }
         updateStatus(Status.Loading)
@@ -140,18 +141,18 @@ class ProfileViewModel : ViewModel() {
                                 Firebase.auth.signOut()
                                 goToAuthActivity(context)
                             } else updateStatus(Status.Done)
-                            notifyUser(task2, context)
+                            NotifyManager.notifyUser(task2, context)
                         }
                 } else {
-                    notifyUser(task, context)
+                    NotifyManager.notifyUser(task, context)
                     updateStatus(Status.Done)
                 }
             }
     }
 
     fun updateUserPassword(context: Context) {
-        if (!isNetworkAvailable(context)) {
-            notifyUser(context)
+        if (!NetworkManager.isNetworkAvailable(context)) {
+            NotifyManager.notifyUser(context)
             return
         }
         updateStatus(Status.Loading)
@@ -169,10 +170,10 @@ class ProfileViewModel : ViewModel() {
                                 Firebase.auth.signOut()
                                 goToAuthActivity(context)
                             } else updateStatus(Status.Done)
-                            notifyUser(task2, context)
+                            NotifyManager.notifyUser(task2, context)
                         }
                 } else {
-                    notifyUser(task, context)
+                    NotifyManager.notifyUser(task, context)
                     updateStatus(Status.Done)
                 }
             }

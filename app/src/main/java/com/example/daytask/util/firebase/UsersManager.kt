@@ -1,8 +1,9 @@
-package com.example.daytask.util
+package com.example.daytask.util.firebase
 
 import android.util.Log
 import com.example.daytask.data.User
-import com.example.daytask.util.DataSnapshotManager.toUserList
+import com.example.daytask.util.Status
+import com.example.daytask.util.firebase.DataSnapshotManager.toUserList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

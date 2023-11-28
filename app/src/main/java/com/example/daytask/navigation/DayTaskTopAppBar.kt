@@ -155,7 +155,9 @@ fun HomeTopBar(
     userPhoto: String?
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .padding(top = dimensionResource(R.dimen.medium))
+            .fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
