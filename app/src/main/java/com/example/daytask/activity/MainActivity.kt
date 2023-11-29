@@ -92,10 +92,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun MainActivity.restartApp() {
+fun MainActivity.goToAuthActivity() {
     val intent = Intent(this, AuthActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    startActivity(intent)
-    finish()
+    val mainIntent = Intent.makeRestartActivityTask(intent.component)
+    startActivity(mainIntent)
     Runtime.getRuntime().exit(0)
 }

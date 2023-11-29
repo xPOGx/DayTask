@@ -18,15 +18,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.example.daytask.activity.MainActivity
-import com.example.daytask.activity.restartApp
 import com.example.daytask.ui.screens.calendar.CalendarDestination
 import com.example.daytask.ui.screens.calendar.CalendarScreen
 import com.example.daytask.ui.screens.chat.ChatDestination
@@ -49,8 +46,6 @@ import com.example.daytask.ui.screens.users.UsersDestination
 import com.example.daytask.ui.screens.users.UsersScreen
 import com.example.daytask.util.Status
 import com.example.daytask.util.firebase.NotificationManager
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -63,8 +58,6 @@ fun DayTaskNavHost(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: HomeDestination.route
-
-    val activity = LocalContext.current as MainActivity
 
     val notifyData by NotificationManager.data.collectAsState()
 
@@ -132,10 +125,6 @@ fun DayTaskNavHost(
             }
             composable(route = ProfileDestination.route) {
                 ProfileScreen(
-                    signOut = {
-                        Firebase.auth.signOut()
-                        activity.restartApp()
-                    },
                     navigateUp = { navController.navigateUp() },
                     navigateToNewTask = { navController.navigate(NewTaskDestination.route) }
                 )

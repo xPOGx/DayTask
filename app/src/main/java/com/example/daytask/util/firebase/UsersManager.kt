@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object UsersManager {
-    private var _data: MutableStateFlow<UsersData> = MutableStateFlow(UsersData())
+    private var _data: MutableStateFlow<UsersManagerData> = MutableStateFlow(UsersManagerData())
     val data = _data.asStateFlow()
 
     private val database = Firebase.database.reference
@@ -49,7 +49,7 @@ object UsersManager {
     }
 }
 
-data class UsersData(
+data class UsersManagerData(
     val users: List<User> = emptyList(),
     val status: Status = Status.Loading
 )

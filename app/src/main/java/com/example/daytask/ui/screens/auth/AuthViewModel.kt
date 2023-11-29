@@ -13,16 +13,9 @@ class AuthViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun updateUiState(uiState: AuthUiState) {
-        _uiState.update {
-            uiState
-        }
-    }
-
+    fun updateUiState(uiState: AuthUiState) { _uiState.update { uiState } }
     fun checkLogIn(): Boolean = checkEmail() && checkPassword()
-
     fun checkSingUp(): Boolean = checkName() && checkLogIn() && _uiState.value.checkedPrivacy
-
     fun checkEmail(): Boolean {
         val email = _uiState.value.email
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()

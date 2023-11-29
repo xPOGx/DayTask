@@ -58,7 +58,7 @@ object TasksManager {
         }
     }
 
-    private fun fetchMembersInfo(usersData: UsersData) {
+    private fun fetchMembersInfo(usersData: UsersManagerData) {
         val taskList = _data.value.taskList
         if (taskList.isEmpty()) return
         val usersList = usersData.users

@@ -12,9 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.daytask.R
+import com.example.daytask.activity.MainActivity
+import com.example.daytask.activity.goToAuthActivity
 import com.example.daytask.navigation.NavigationDestination
 import com.example.daytask.ui.screens.tools.LoadingDialog
 import com.example.daytask.util.Status
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 object ProfileDestination : NavigationDestination {
     override val route = "profile"
@@ -32,7 +36,6 @@ enum class ChangeKey {
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel(),
-    signOut: () -> Unit,
     navigateUp: () -> Unit,
     navigateToNewTask: () -> Unit
 ) {
@@ -46,13 +49,15 @@ fun ProfileScreen(
     if (uiState.updateResult) navigateUp()
 
     ProfileBody(
-        signOut = signOut,
+        signOut = {
+            Firebase.auth.signOut()
+            (context as MainActivity).goToAuthActivity()
+        },
         saveImage = { viewModel.updateUserAvatar(context, it) },
         changeButton = { changeKey = it },
         disabled = viewModel.disabled,
         modifier = modifier.verticalScroll(rememberScrollState())
     )
-
 
     when (changeKey) {
         ChangeKey.NAME, ChangeKey.PASSWORD, ChangeKey.EMAIL -> {
