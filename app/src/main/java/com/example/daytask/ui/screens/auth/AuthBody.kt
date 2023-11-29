@@ -52,16 +52,12 @@ fun AuthBody(
     enableSignUp: Boolean,
     checkPrivacy: Boolean
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier) {
         if (!isLogIn) {
             InputColumn(
                 headlineText = stringResource(R.string.full_name),
                 inputText = uiState.fullName,
-                onValueChange = {
-                    updateUiState(uiState.copy(fullName = it))
-                },
+                onValueChange = { updateUiState(uiState.copy(fullName = it)) },
                 leadingIconRes = R.drawable.ic_user,
                 validation = validName,
                 errorTextRes = R.string.invalid_name,
@@ -75,8 +71,7 @@ fun AuthBody(
             validPassword = validPassword,
             errorEmailRes = R.string.invalid_email,
             errorPasswordRes = R.string.invalid_password,
-            modifier = Modifier.padding(
-                top = if (isLogIn)
+            modifier = Modifier.padding(top = if (isLogIn)
                     dimensionResource(R.dimen.small) else dimensionResource(R.dimen.medium)
             )
         )
@@ -138,9 +133,7 @@ fun AuthBody(
             style = HelpText,
             modifier = Modifier
                 .padding(vertical = dimensionResource(R.dimen.big))
-                .clickable(
-                    onClick = changeIsLogIn
-                )
+                .clickable(onClick = changeIsLogIn)
                 .align(Alignment.CenterHorizontally)
         )
     }

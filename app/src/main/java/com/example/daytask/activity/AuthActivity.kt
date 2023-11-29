@@ -100,13 +100,9 @@ class AuthActivity : ComponentActivity() {
                         if (idToken != null) {
                             val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
                             auth.signInWithCredential(firebaseCredential)
-                                .addOnCompleteListener(this) { task ->
+                                .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        val user = auth.currentUser!!
-                                        val ref =
-                                            Firebase.database.reference.child("users/${user.uid}")
-                                        ref.child("displayName").setValue(user.displayName)
-                                        ref.child("photoUrl").setValue(user.photoUrl.toString())
+                                        userToDatabase()
                                         goToMainActivity()
                                     } else errorToast(task.exception!!)
                                 }
@@ -125,7 +121,7 @@ class AuthActivity : ComponentActivity() {
     ) {
         load = true
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) createProfile(name)
                 else errorToast(task.exception!!)
             }
@@ -137,7 +133,7 @@ class AuthActivity : ComponentActivity() {
     ) {
         load = true
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) goToMainActivity()
                 else errorToast(task.exception!!)
             }
@@ -146,7 +142,7 @@ class AuthActivity : ComponentActivity() {
     private fun googleSignIn() {
         load = true
         oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(this) { result ->
+            .addOnSuccessListener { result ->
                 try {
                     val intent = IntentSenderRequest.Builder(result.pendingIntent).build()
                     googleResult.launch(intent)
@@ -154,7 +150,7 @@ class AuthActivity : ComponentActivity() {
                     errorToast(e)
                 }
             }
-            .addOnFailureListener(this) { errorToast(it) }
+            .addOnFailureListener { errorToast(it) }
     }
 
     private fun goToMainActivity() {
@@ -169,11 +165,9 @@ class AuthActivity : ComponentActivity() {
             .build()
 
         auth.currentUser!!.updateProfile(profile)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = auth.currentUser!!
-                    Firebase.database.reference.child("users/${user.uid}/displayName")
-                        .setValue(user.displayName)
+                    userToDatabase()
                     goToMainActivity()
                 } else errorToast(task.exception!!)
             }
@@ -181,10 +175,21 @@ class AuthActivity : ComponentActivity() {
 
     private fun errorToast(exception: Exception) {
         Toast.makeText(
-            this.applicationContext,
+            applicationContext,
             "Authentication failed. ${exception.message}",
             Toast.LENGTH_SHORT,
         ).show()
         load = false
+    }
+
+    private fun userToDatabase() {
+        val user = auth.currentUser!!
+        Firebase.database.reference.child("users/${user.uid}")
+            .setValue(
+                mapOf(
+                    "displayName" to user.displayName,
+                    "photoUrl" to user.photoUrl
+                )
+            )
     }
 }
