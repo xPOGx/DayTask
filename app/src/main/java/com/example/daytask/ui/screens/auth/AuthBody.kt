@@ -45,6 +45,7 @@ fun AuthBody(
     logIn: () -> Unit,
     signUp: () -> Unit,
     googleSignIn: () -> Unit,
+    sendForgotPassword: () -> Unit,
     validEmail: () -> Boolean,
     validPassword: () -> Boolean,
     validName: () -> Boolean,
@@ -78,7 +79,7 @@ fun AuthBody(
         if (isLogIn) {
             ForgotText(
                 text = stringResource(R.string.forgot_password),
-                onClick = {/* TODO: forgot password Send */},
+                onClick = { if (validEmail()) sendForgotPassword() },
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = dimensionResource(R.dimen.small))

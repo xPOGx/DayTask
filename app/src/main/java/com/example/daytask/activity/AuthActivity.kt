@@ -63,6 +63,7 @@ class AuthActivity : ComponentActivity() {
                     AuthScreen(
                         signUp = this::signUp,
                         logIn = this::logIn,
+                        forgotPassword = this::forgotPassword,
                         googleSignIn = this::googleSignIn
                     )
                     if (load) {
@@ -196,5 +197,14 @@ class AuthActivity : ComponentActivity() {
                     "photoUrl" to user.photoUrl
                 )
             )
+    }
+
+    private fun forgotPassword(email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Successfully sent", Toast.LENGTH_SHORT).show()
+                } else errorToast(task.exception!!)
+            }
     }
 }

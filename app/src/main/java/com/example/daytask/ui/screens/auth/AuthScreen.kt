@@ -29,6 +29,7 @@ fun AuthScreen(
     viewModel: AuthViewModel = viewModel(),
     signUp: (String, String, String) -> Unit,
     logIn: (String, String) -> Unit,
+    forgotPassword: (String) -> Unit,
     googleSignIn: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -59,9 +60,10 @@ fun AuthScreen(
             updateUiState = viewModel::updateUiState,
             isLogIn = isLogIn,
             changeIsLogIn = { isLogIn = !isLogIn },
-            logIn = { logIn(uiState.email, uiState.password)  },
+            logIn = { logIn(uiState.email, uiState.password) },
             signUp = { signUp(uiState.email, uiState.password, uiState.fullName) },
             googleSignIn = googleSignIn,
+            sendForgotPassword = { forgotPassword(uiState.email) },
             checkPrivacy = uiState.checkedPrivacy,
             validEmail = viewModel::checkEmail,
             validPassword = viewModel::checkPassword,
