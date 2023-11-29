@@ -47,6 +47,7 @@ class AuthActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         auth = Firebase.auth
+        checkUserSingOut()
         initGoogle()
 
         setContent {
@@ -70,6 +71,10 @@ class AuthActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun checkUserSingOut() {
+        if (auth.currentUser != null) auth.signOut()
     }
 
     private fun initGoogle() {
